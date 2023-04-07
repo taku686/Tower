@@ -26,4 +26,6 @@ public partial class GameCore : MonoBehaviour
         _stateMachine.AddTransition<BattleState, BattleReadyState>((int)Event.BattleResult);
         _stateMachine.AddTransition<BattleResultState, TitleState>((int)Event.Title);
     }
+    
+    
 }
