@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Data;
+using Manager.DataManager;
 using PlayFab;
 using PlayFab.ClientModels;
 using UnityEngine;
@@ -9,11 +10,13 @@ namespace DefaultNamespace
     public class PlayFabLoginManager : MonoBehaviour
     {
         private GetPlayerCombinedInfoRequestParams _info;
+        private PlayFabTitleDataManager _playFabTitleDataManager;
 
-
-        public void Initialize()
+        public void Initialize(PlayFabTitleDataManager playFabTitleDataManager, BlockDataManager blockDataManager)
         {
             PlayFabSettings.staticSettings.TitleId = GameCommonData.TitleId;
+            _playFabTitleDataManager = playFabTitleDataManager;
+            _playFabTitleDataManager.Initialize(blockDataManager);
         }
 
         public async UniTask<bool> Login()
@@ -41,7 +44,9 @@ namespace DefaultNamespace
                 return false;
             }
 
-            Debug.Log("login");
+
+            var titleData = response.Result.InfoResultPayload.TitleData;
+            await _playFabTitleDataManager.SetTitleData(titleData);
             return true;
         }
     }
