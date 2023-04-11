@@ -1,9 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class BattleReadyView : MonoBehaviour
 {
-   public Button backButton;
+    public Button backButton;
 }

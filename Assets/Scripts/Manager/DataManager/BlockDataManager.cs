@@ -27,5 +27,11 @@ namespace Manager.DataManager
 
             return _blockDatum[index];
         }
+
+        public BlockData GetRandomBlockData()
+        {
+            var index = Random.Range(0, _blockDatum.Count);
+            return _blockDatum[index];
+        }
     }
 }

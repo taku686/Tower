@@ -25,6 +25,7 @@ public partial class GameCore
         {
             if (!Owner._isOnLine)
             {
+                PhotonNetwork.OfflineMode = true;
                 _stateMachine.Dispatch((int)Event.Battle);
             }
 
@@ -54,7 +55,7 @@ public partial class GameCore
 
         private void TransitionBattleState()
         {
-            if (!PhotonNetwork.IsConnected)
+            if (!PhotonNetwork.IsConnected || PhotonNetwork.CurrentRoom == null)
             {
                 return;
             }

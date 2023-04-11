@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using DefaultNamespace;
 using Manager.DataManager;
@@ -18,6 +17,8 @@ public partial class GameCore : MonoBehaviour
     [SerializeField] private BattleReadyView battleReadyView;
     [SerializeField] private BattleView battleView;
     [SerializeField] private BattleResultView battleResultView;
+    [SerializeField] private BlockFactory blockFactory;
+    [SerializeField] private GameOverLine gameOverLine;
     [SerializeField] private List<GameObject> uiObjects = new();
     private bool _isOnLine;
 
