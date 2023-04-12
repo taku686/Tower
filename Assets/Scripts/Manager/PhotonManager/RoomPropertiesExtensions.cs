@@ -41,4 +41,16 @@ public static class RoomPropertiesExtensions
         room.SetCustomProperties(PropsToSet);
         PropsToSet.Clear();
     }
+
+    public static int GetBattleEnd(this Room room)
+    {
+        return room.CustomProperties[GameCommonData.BattleEndKey] is int index ? index : 999;
+    }
+
+    public static void SetBattleEnd(this Room room, int index)
+    {
+        PropsToSet[GameCommonData.BattleEndKey] = index;
+        room.SetCustomProperties(PropsToSet);
+        PropsToSet.Clear();
+    }
 }

@@ -9,4 +9,5 @@ public class BattleResultView : MonoBehaviour
     public Button twitterButton;
     public Button replayButton;
     public TextMeshProUGUI resultText;
+    public Image resultImage;
 }

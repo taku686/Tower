@@ -39,6 +39,7 @@ public partial class GameCore
             var player = PlayFabSettings.staticPlayer;
             if (player.IsClientLoggedIn())
             {
+                _stateMachine.Dispatch((int)Event.BattleModeSelect);
                 return;
             }
 
