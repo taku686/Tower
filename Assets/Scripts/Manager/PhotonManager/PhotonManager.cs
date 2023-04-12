@@ -12,9 +12,11 @@ namespace Photon
         private readonly Subject<Unit> _changeTurn = new();
         private readonly Subject<int> _changeIndex = new();
         private readonly Subject<int> _generateBlock = new();
+        private readonly Subject<int> _battleEnd = new();
         public Subject<int> GenerateBlock => _generateBlock;
 
         public Subject<int> ChangeIndex => _changeIndex;
+        public Subject<int> BattleEnd => _battleEnd;
 
         public Subject<Unit> ChangeTurn => _changeTurn;
 
@@ -101,6 +103,18 @@ namespace Photon
                     }
 
                     _generateBlock.OnNext(index);
+                }
+
+                if ((string)property.Key == GameCommonData.BattleEndKey)
+                {
+                    var index = (int)property.Value;
+                    if (index == GameCommonData.ErrorCode)
+                    {
+                        return;
+                    }
+
+                    Debug.Log("Battle End");
+                    _battleEnd.OnNext(index);
                 }
             }
         }

@@ -15,7 +15,7 @@ namespace Block
         public int index;
         public bool isOwn;
 
-        private void Start()
+        private void OnEnable()
         {
             _rigidbody2D = GetComponent<Rigidbody2D>();
         }

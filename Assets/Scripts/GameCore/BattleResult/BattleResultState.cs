@@ -8,6 +8,12 @@ public partial class GameCore
     {
         private GameOverLine _gameOverLine;
         private CancellationTokenSource _cancellationTokenSource;
+        private BattleResultView _battleResultView;
+        private StateMachine<GameCore> _stateMachine;
+        private static readonly Color WinColor = Color.red;
+        private static readonly Color LoseColor = Color.green;
+        private const string WinText = "Win";
+        private const string LoseText = "Lose";
 
         protected override void OnEnter(State prevState)
         {
@@ -18,8 +24,28 @@ public partial class GameCore
         {
             _cancellationTokenSource = new CancellationTokenSource();
             _gameOverLine = Owner.gameOverLine;
-            var message = _gameOverLine.GameEnd.Value ? "勝利" : "敗北";
-            Debug.Log(message);
+            _battleResultView = Owner.battleResultView;
+            _stateMachine = Owner._stateMachine;
+            InitializeButton();
+            SetUpUiContent();
+            Owner.SwitchUiView((int)Event.BattleResult);
+        }
+
+        private void InitializeButton()
+        {
+            _battleResultView.backButton.onClick.RemoveAllListeners();
+            _battleResultView.backButton.onClick.AddListener(OnClickBack);
+        }
+
+        private void SetUpUiContent()
+        {
+            _battleResultView.resultImage.color = _gameOverLine.GameEnd.Value ? WinColor : LoseColor;
+            _battleResultView.resultText.text = _gameOverLine.GameEnd.Value ? WinText : LoseText;
+        }
+
+        private void OnClickBack()
+        {
+            _stateMachine.Dispatch((int)Event.Title);
         }
     }
 }

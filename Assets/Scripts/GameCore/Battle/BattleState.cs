@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Block;
@@ -24,6 +25,9 @@ public partial class GameCore
         private BlockGameObject _currentBlockObj;
         private GameOverLine _gameOverLine;
         private StateMachine<GameCore> _stateMachine;
+        private int _battleEndCount;
+        private const string MyTurnText = "あなたの番";
+        private const string EnemyTurnText = "相手の番";
 
         protected override void OnEnter(State prevState)
         {
@@ -32,6 +36,9 @@ public partial class GameCore
 
         protected override void OnExit(State nextState)
         {
+            _isMyTurn = false;
+            _battleEndCount = 0;
+            _currentBlockObj = null;
             Cancel();
         }
 
@@ -77,8 +84,13 @@ public partial class GameCore
             if (PhotonNetwork.IsMasterClient)
             {
                 _isMyTurn = true;
+                _battleView.turnText.text = MyTurnText;
                 var index = _blockDataManager.GetRandomBlockData().Id;
                 PhotonNetwork.CurrentRoom.SetBlockIndex(index);
+            }
+            else
+            {
+                _battleView.turnText.text = EnemyTurnText;
             }
         }
 
@@ -94,10 +106,12 @@ public partial class GameCore
             {
                 if (!_isMyTurn)
                 {
+                    _battleView.turnText.text = EnemyTurnText;
                     _isMyTurn = !_isMyTurn;
                     return;
                 }
 
+                _battleView.turnText.text = MyTurnText;
                 var blockData = _blockDataManager.GetBlockData(index);
                 var block = await _blockFactory.GenerateBlock(blockData);
                 _currentBlockObj = block.GetComponent<BlockGameObject>();
@@ -111,10 +125,24 @@ public partial class GameCore
                     var blockIndex = _blockDataManager.GetRandomBlockData().Id;
                     PhotonNetwork.CurrentRoom.SetBlockIndex(blockIndex);
                     _isMyTurn = !_isMyTurn;
-                }).AddTo(block.GetCancellationTokenOnDestroy());
+                }).AddTo(_cancellationTokenSource.Token);
             })).AddTo(_cancellationTokenSource.Token);
 
-            _gameOverLine.GameEnd.Subscribe(value => { _stateMachine.Dispatch((int)Event.BattleResult); }).AddTo(_cancellationTokenSource.Token);
+            _gameOverLine.GameEnd.Skip(1).Subscribe(value => { PhotonNetwork.CurrentRoom.SetBattleEnd(1); })
+                .AddTo(_cancellationTokenSource.Token);
+
+            _photonManager.BattleEnd.Subscribe(value =>
+            {
+                _battleEndCount += value;
+                if (_battleEndCount < PhotonNetwork.CurrentRoom.MaxPlayers)
+                {
+                    return;
+                }
+
+                DestroyAllBlock();
+                PhotonNetwork.LeaveRoom();
+                _stateMachine.Dispatch((int)Event.BattleResult);
+            }).AddTo(_cancellationTokenSource.Token);
         }
 
         private async UniTaskVoid OnPointerUp(BlockGameObject blockSc)
@@ -145,6 +173,20 @@ public partial class GameCore
 
             _currentBlockObj.BlockStateReactiveProperty.Value = BlockSate.Rotating;
             _currentBlockObj.transform.localEulerAngles += new Vector3(0, 0, 45);
+        }
+
+        private void DestroyAllBlock()
+        {
+            if (!PhotonNetwork.IsMasterClient)
+            {
+                return;
+            }
+
+            var blocks = GameObject.FindGameObjectsWithTag(GameCommonData.BlockTag);
+            foreach (var block in blocks)
+            {
+                PhotonNetwork.Destroy(block);
+            }
         }
 
         private void Cancel()

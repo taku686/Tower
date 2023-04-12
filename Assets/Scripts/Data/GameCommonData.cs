@@ -9,6 +9,7 @@
         public const string IsMyTurnKey = "Turn";
         public const string BlockIndexKey = "Index";
         public const string GenerateBlockKey = "Gen";
+        public const string BattleEndKey = "End";
         public const string BlockTag = "Block";
         public const string GroundTag = "Ground";
         public const int ErrorCode = 999;
