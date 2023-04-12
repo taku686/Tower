@@ -114,11 +114,7 @@ public partial class GameCore
                 }).AddTo(block.GetCancellationTokenOnDestroy());
             })).AddTo(_cancellationTokenSource.Token);
 
-            _gameOverLine.GameEnd.Subscribe(value =>
-            {
-                Debug.Log("GameOver");
-                _stateMachine.Dispatch((int)Event.BattleResult);
-            }).AddTo(_cancellationTokenSource.Token);
+            _gameOverLine.GameEnd.Subscribe(value => { _stateMachine.Dispatch((int)Event.BattleResult); }).AddTo(_cancellationTokenSource.Token);
         }
 
         private async UniTaskVoid OnPointerUp(BlockGameObject blockSc)

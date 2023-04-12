@@ -14,9 +14,7 @@ public class GameOverLine : MonoBehaviour
             return;
         }
 
-        Debug.Log("接触");
         var blockSc = col.GetComponent<BlockGameObject>();
-        Debug.Log(blockSc.gameObject.name);
         GameEnd.SetValueAndForceNotify(!blockSc.isOwn);
     }
 
