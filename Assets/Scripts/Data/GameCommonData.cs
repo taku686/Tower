@@ -10,6 +10,7 @@
         public const string BlockIndexKey = "Index";
         public const string GenerateBlockKey = "Gen";
         public const string BattleEndKey = "End";
+        public const string UserKey = "User";
         public const string BlockTag = "Block";
         public const string GroundTag = "Ground";
         public const int ErrorCode = 999;

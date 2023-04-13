@@ -21,9 +21,6 @@ public partial class GameCore
             _playFabLoginManager = Owner.playFabLoginManager;
             _titleView = Owner.titleView;
             _stateMachine = Owner._stateMachine;
-            var titleDataManager = Owner.playFabTitleDataManager;
-            var blockDataManager = Owner.blockDataManager;
-            _playFabLoginManager.Initialize(titleDataManager, blockDataManager);
             InitializeButton();
             Owner.SwitchUiView((int)Event.Title);
         }
