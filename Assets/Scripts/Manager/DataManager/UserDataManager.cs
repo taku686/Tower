@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Data;
 using UnityEngine;
 
 public class UserDataManager : MonoBehaviour
@@ -22,19 +23,33 @@ public class UserDataManager : MonoBehaviour
         return _userData;
     }
 
-    public string GetUserName()
+    public async UniTask<string> GetUserName()
     {
-        return _userData.Name;
+        var userName = await _playFabUserDataManager.GetUserDisplayName();
+        return userName;
     }
 
-    public void SetUserName(string userName)
+    public async UniTask<bool> SetUserName(string userName)
     {
+        var result = await _playFabUserDataManager.UpdateUserDisplayName(userName);
+        if (!result)
+        {
+            return false;
+        }
+
+        PlayerPrefs.SetString(GameCommonData.UserKey, userName);
         _userData.Name = userName;
+        return true;
     }
 
     public async UniTask UpdateUserData(UserData userData)
     {
         _userData = userData;
+        await _playFabUserDataManager.TryUpdateUserDataAsync(_userData);
+    }
+
+    public async UniTask UpdateUserData()
+    {
         await _playFabUserDataManager.TryUpdateUserDataAsync(_userData);
     }
 
@@ -46,6 +61,7 @@ public class UserDataManager : MonoBehaviour
             WinCount = 0,
             ContinuityWinCount = 0
         };
+        PlayerPrefs.SetString(GameCommonData.UserKey, "");
         _userData = userData;
         return _userData;
     }

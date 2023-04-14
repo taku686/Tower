@@ -38,6 +38,7 @@ public partial class GameCore : MonoBehaviour
 
     private void Start()
     {
+        SwitchUiView((int)(Event.Title));
         Initialize();
         InitializeState();
     }
@@ -52,6 +53,7 @@ public partial class GameCore : MonoBehaviour
         userDataManager.Initialize(playFabUserDataManager);
         playFabTitleDataManager.Initialize(blockDataManager);
         playFabLoginManager.Initialize(playFabTitleDataManager, userDataManager);
+        titleView.Initialize();
     }
 
     private void InitializeState()
@@ -64,6 +66,7 @@ public partial class GameCore : MonoBehaviour
         _stateMachine.AddTransition<BattleReadyState, BattleState>((int)Event.Battle);
         _stateMachine.AddTransition<BattleState, BattleResultState>((int)Event.BattleResult);
         _stateMachine.AddTransition<BattleResultState, TitleState>((int)Event.Title);
+        _stateMachine.AddTransition<NameChangeState, TitleState>((int)Event.Title);
         _stateMachine.AddTransition<TitleState, NameChangeState>((int)Event.NameChange);
     }
 

@@ -76,7 +76,7 @@ public class PlayFabUserDataManager : MonoBehaviour
         }
     }
 
-    public async UniTask<bool> UpdateUserDisplayName(string playerName, TextMeshProUGUI errorText)
+    public async UniTask<bool> UpdateUserDisplayName(string playerName)
     {
         if (string.IsNullOrEmpty(playerName))
         {
@@ -95,20 +95,44 @@ public class PlayFabUserDataManager : MonoBehaviour
             {
                 case PlayFabErrorCode.InvalidParams:
                     Debug.Log("名前の文字数制限エラーです");
-                    errorText.text = "名前は3~15文字以内で入力して下さい。";
+                    //  errorText.text = "名前は3~15文字以内で入力して下さい。";
                     return false;
                 case PlayFabErrorCode.ProfaneDisplayName:
                     Debug.Log("この名前は使用できません");
-                    errorText.text = "この名前は使用できません。";
+                    //   errorText.text = "この名前は使用できません。";
                     return false;
                 default:
-                    errorText.text = "この名前は使用できません。";
+                    //   errorText.text = "この名前は使用できません。";
                     Debug.Log(response.Error.GenerateErrorReport());
                     return false;
             }
         }
 
         return true;
+    }
+
+    public async UniTask<string> GetUserDisplayName()
+    {
+        var request = new GetPlayerProfileRequest();
+
+        var response = await PlayFabClientAPI.GetPlayerProfileAsync(request);
+        if (response.Error != null)
+        {
+            switch (response.Error.Error)
+            {
+                case PlayFabErrorCode.InvalidParams:
+                    Debug.Log("名前の文字数制限エラーです");
+                    break;
+                case PlayFabErrorCode.ProfaneDisplayName:
+                    Debug.Log("この名前は使用できません");
+                    break;
+                default:
+                    Debug.Log(response.Error.GenerateErrorReport());
+                    break;
+            }
+        }
+
+        return response.Result.PlayerProfile.DisplayName;
     }
 
     public void Dispose()
