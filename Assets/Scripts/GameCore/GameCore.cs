@@ -3,6 +3,7 @@ using DefaultNamespace;
 using Manager.DataManager;
 using Photon;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public partial class GameCore : MonoBehaviour
 {
@@ -10,13 +11,16 @@ public partial class GameCore : MonoBehaviour
 
     [SerializeField] private PlayFabLoginManager playFabLoginManager;
     [SerializeField] private PlayFabTitleDataManager playFabTitleDataManager;
+    [SerializeField] private PlayFabUserDataManager playFabUserDataManager;
     [SerializeField] private BlockDataManager blockDataManager;
     [SerializeField] private PhotonManager photonManager;
+    [SerializeField] private UserDataManager userDataManager;
     [SerializeField] private TitleView titleView;
     [SerializeField] private BattleModeSelectView battleModeSelectView;
     [SerializeField] private BattleReadyView battleReadyView;
     [SerializeField] private BattleView battleView;
     [SerializeField] private BattleResultView battleResultView;
+    [SerializeField] private NameChangeView nameChangeView;
     [SerializeField] private BlockFactory blockFactory;
     [SerializeField] private GameOverLine gameOverLine;
     [SerializeField] private List<GameObject> uiObjects = new();
@@ -28,17 +32,28 @@ public partial class GameCore : MonoBehaviour
         BattleModeSelect,
         BattleReady,
         Battle,
-        BattleResult
+        BattleResult,
+        NameChange
     }
 
     private void Start()
     {
+        SwitchUiView((int)(Event.Title));
+        Initialize();
         InitializeState();
     }
 
     private void Update()
     {
         _stateMachine.Update();
+    }
+
+    private void Initialize()
+    {
+        userDataManager.Initialize(playFabUserDataManager);
+        playFabTitleDataManager.Initialize(blockDataManager);
+        playFabLoginManager.Initialize(playFabTitleDataManager, userDataManager);
+        titleView.Initialize();
     }
 
     private void InitializeState()
@@ -51,6 +66,8 @@ public partial class GameCore : MonoBehaviour
         _stateMachine.AddTransition<BattleReadyState, BattleState>((int)Event.Battle);
         _stateMachine.AddTransition<BattleState, BattleResultState>((int)Event.BattleResult);
         _stateMachine.AddTransition<BattleResultState, TitleState>((int)Event.Title);
+        _stateMachine.AddTransition<NameChangeState, TitleState>((int)Event.Title);
+        _stateMachine.AddTransition<TitleState, NameChangeState>((int)Event.NameChange);
     }
 
     private void SwitchUiView(int index)

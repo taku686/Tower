@@ -1,6 +1,9 @@
 ﻿using Cysharp.Threading.Tasks;
+using Data;
 using DefaultNamespace;
 using PlayFab;
+using UnityEditor;
+using UnityEngine;
 using State = StateMachine<GameCore>.State;
 
 public partial class GameCore
@@ -10,46 +13,52 @@ public partial class GameCore
         private PlayFabLoginManager _playFabLoginManager;
         private TitleView _titleView;
         private StateMachine<GameCore> _stateMachine;
+        private UserDataManager _userDataManager;
 
         protected override void OnEnter(State prevState)
         {
-            Initialize();
+            Initialize().Forget();
         }
 
-        private void Initialize()
+        private async UniTask Initialize()
         {
             _playFabLoginManager = Owner.playFabLoginManager;
             _titleView = Owner.titleView;
             _stateMachine = Owner._stateMachine;
-            var titleDataManager = Owner.playFabTitleDataManager;
-            var blockDataManager = Owner.blockDataManager;
-            _playFabLoginManager.Initialize(titleDataManager, blockDataManager);
+            _userDataManager = Owner.userDataManager;
+            await Login();
             InitializeButton();
+            SetUpUiContents();
             Owner.SwitchUiView((int)Event.Title);
         }
 
         private void InitializeButton()
         {
             _titleView.startButton.onClick.RemoveAllListeners();
-            _titleView.startButton.onClick.AddListener(() => UniTask.Void(async () => { await OnClickStart(); }));
+            _titleView.nameChangeButton.onClick.RemoveAllListeners();
+            _titleView.startButton.onClick.AddListener(OnClickStart);
+            _titleView.nameChangeButton.onClick.AddListener(OnClickNameChange);
         }
 
-        private async UniTask OnClickStart()
+        private void SetUpUiContents()
         {
-            var player = PlayFabSettings.staticPlayer;
-            if (player.IsClientLoggedIn())
+            if (string.IsNullOrEmpty(PlayerPrefs.GetString(GameCommonData.UserKey)))
             {
-                _stateMachine.Dispatch((int)Event.BattleModeSelect);
+                _titleView.nameText.text = "";
                 return;
             }
 
-            var result = await Login();
-            if (!result)
-            {
-                return;
-            }
+            _titleView.nameText.text = PlayerPrefs.GetString(GameCommonData.UserKey);
+        }
 
+        private void OnClickStart()
+        {
             _stateMachine.Dispatch((int)Event.BattleModeSelect);
+        }
+
+        private void OnClickNameChange()
+        {
+            _stateMachine.Dispatch((int)Event.NameChange);
         }
 
         private async UniTask<bool> Login()
@@ -59,6 +68,13 @@ public partial class GameCore
             {
                 return false;
             }
+
+            var userName = await _userDataManager.GetUserName();
+            if (string.IsNullOrEmpty(userName))
+            {
+                _stateMachine.Dispatch((int)Event.NameChange);
+            }
+
 
             return true;
         }

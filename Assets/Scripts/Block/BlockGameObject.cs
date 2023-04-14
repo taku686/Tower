@@ -1,9 +1,6 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
-using Data;
+﻿using Data;
 using UniRx;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Block
 {
@@ -51,6 +48,7 @@ namespace Block
         {
             if (col.collider.CompareTag(GameCommonData.GroundTag) || col.collider.CompareTag(GameCommonData.BlockTag))
             {
+                Debug.Log("接触");
                 _rigidbody2D.gravityScale = 1;
             }
         }

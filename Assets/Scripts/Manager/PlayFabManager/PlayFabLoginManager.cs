@@ -1,6 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Data;
-using Manager.DataManager;
+using Newtonsoft.Json;
 using PlayFab;
 using PlayFab.ClientModels;
 using UnityEngine;
@@ -11,12 +11,13 @@ namespace DefaultNamespace
     {
         private GetPlayerCombinedInfoRequestParams _info;
         private PlayFabTitleDataManager _playFabTitleDataManager;
+        private UserDataManager _userDataManager;
 
-        public void Initialize(PlayFabTitleDataManager playFabTitleDataManager, BlockDataManager blockDataManager)
+        public void Initialize(PlayFabTitleDataManager playFabTitleDataManager, UserDataManager userDataManager)
         {
             PlayFabSettings.staticSettings.TitleId = GameCommonData.TitleId;
             _playFabTitleDataManager = playFabTitleDataManager;
-            _playFabTitleDataManager.Initialize(blockDataManager);
+            _userDataManager = userDataManager;
         }
 
         public async UniTask<bool> Login()
@@ -46,6 +47,18 @@ namespace DefaultNamespace
 
 
             var titleData = response.Result.InfoResultPayload.TitleData;
+            if (!response.Result.InfoResultPayload.UserData.ContainsKey(GameCommonData.UserKey))
+            {
+                var newData = _userDataManager.CreateUserData();
+                await _userDataManager.UpdateUserData(newData);
+            }
+            else
+            {
+                var userData = JsonConvert.DeserializeObject<UserData>(response.Result.InfoResultPayload
+                    .UserData[GameCommonData.UserKey].Value);
+                _userDataManager.SetUserData(userData);
+            }
+
             await _playFabTitleDataManager.SetTitleData(titleData);
             return true;
         }
