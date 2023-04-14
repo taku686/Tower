@@ -26,6 +26,7 @@ public partial class GameCore
             _titleView = Owner.titleView;
             _stateMachine = Owner._stateMachine;
             _userDataManager = Owner.userDataManager;
+            if (Camera.main != null) Camera.main.transform.localPosition = new Vector3(0, 0, -10);
             await Login();
             InitializeButton();
             SetUpUiContents();
@@ -66,6 +67,7 @@ public partial class GameCore
             var result = await _playFabLoginManager.Login();
             if (!result)
             {
+                Debug.Log("失敗");
                 return false;
             }
 
@@ -74,7 +76,6 @@ public partial class GameCore
             {
                 _stateMachine.Dispatch((int)Event.NameChange);
             }
-
 
             return true;
         }

@@ -48,7 +48,6 @@ namespace Block
         {
             if (col.collider.CompareTag(GameCommonData.GroundTag) || col.collider.CompareTag(GameCommonData.BlockTag))
             {
-                Debug.Log("接触");
                 _rigidbody2D.gravityScale = 1;
             }
         }
