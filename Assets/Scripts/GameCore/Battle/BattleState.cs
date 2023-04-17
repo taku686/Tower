@@ -18,8 +18,10 @@ public partial class GameCore
         private PhotonManager _photonManager;
         private BlockFactory _blockFactory;
         private BlockDataManager _blockDataManager;
+
         private CancellationTokenSource _cancellationTokenSource;
-        private bool _isMyTurn;
+
+        //  private bool _isMyTurn;
         private BlockGameObject _currentBlockObj;
         private GameOverLine _gameOverLine;
         private StateMachine<GameCore> _stateMachine;
@@ -34,7 +36,6 @@ public partial class GameCore
 
         protected override void OnExit(State nextState)
         {
-            _isMyTurn = false;
             _battleEndCount = 0;
             _currentBlockObj = null;
             Cancel();
@@ -47,7 +48,7 @@ public partial class GameCore
                 return;
             }
 
-            if (Input.GetMouseButton(0) && _isMyTurn)
+            if (Input.GetMouseButton(0) && Owner._isMyTurn)
             {
                 var mousePos = Input.mousePosition;
                 _currentBlockObj.BlockStateReactiveProperty.Value = BlockSate.Operating;
@@ -61,7 +62,7 @@ public partial class GameCore
                 }
             }
 
-            if (Input.GetMouseButtonUp(0) && _isMyTurn)
+            if (Input.GetMouseButtonUp(0) && Owner._isMyTurn)
             {
                 OnPointerUp(_currentBlockObj).Forget();
             }
@@ -81,7 +82,7 @@ public partial class GameCore
             Owner.SwitchUiView((int)Event.Battle);
             if (PhotonNetwork.IsMasterClient)
             {
-                _isMyTurn = true;
+                Owner._isMyTurn = true;
                 _battleView.turnText.text = MyTurnText;
                 var index = _blockDataManager.GetRandomBlockData().Id;
                 PhotonNetwork.CurrentRoom.SetBlockIndex(index);
@@ -102,10 +103,10 @@ public partial class GameCore
         {
             _photonManager.ChangeIndex.Subscribe(index => UniTask.Void(async () =>
             {
-                if (!_isMyTurn)
+                if (!Owner._isMyTurn)
                 {
                     _battleView.turnText.text = EnemyTurnText;
-                    _isMyTurn = !_isMyTurn;
+                    Owner._isMyTurn = !Owner._isMyTurn;
                     return;
                 }
 
@@ -122,7 +123,7 @@ public partial class GameCore
 
                     var blockIndex = _blockDataManager.GetRandomBlockData().Id;
                     PhotonNetwork.CurrentRoom.SetBlockIndex(blockIndex);
-                    _isMyTurn = !_isMyTurn;
+                    Owner._isMyTurn = !Owner._isMyTurn;
                 }).AddTo(_cancellationTokenSource.Token);
             })).AddTo(_cancellationTokenSource.Token);
 
@@ -164,7 +165,7 @@ public partial class GameCore
 
         private void OnClickRotate()
         {
-            if (!_isMyTurn || _currentBlockObj == null)
+            if (!Owner._isMyTurn || _currentBlockObj == null)
             {
                 return;
             }

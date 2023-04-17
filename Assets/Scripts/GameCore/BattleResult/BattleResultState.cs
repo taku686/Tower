@@ -20,6 +20,11 @@ public partial class GameCore
             Initialize();
         }
 
+        protected override void OnExit(State nextState)
+        {
+            Owner._isMyTurn = false;
+        }
+
         private void Initialize()
         {
             _cancellationTokenSource = new CancellationTokenSource();
@@ -39,8 +44,8 @@ public partial class GameCore
 
         private void SetUpUiContent()
         {
-            _battleResultView.resultImage.color = _gameOverLine.GameEnd.Value ? WinColor : LoseColor;
-            _battleResultView.resultText.text = _gameOverLine.GameEnd.Value ? WinText : LoseText;
+            _battleResultView.resultImage.color = !Owner._isMyTurn ? WinColor : LoseColor;
+            _battleResultView.resultText.text = !Owner._isMyTurn ? WinText : LoseText;
         }
 
         private void OnClickBack()

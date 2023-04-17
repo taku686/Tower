@@ -11,6 +11,11 @@ public class BlockFactory : MonoBehaviour
     [SerializeField] private PhysicsMaterial2D material;
     private int _count;
 
+    public void ResetBlockParent()
+    {
+        blockParent.localPosition = new Vector3(0, 1.12f, 0);
+    }
+
     public async UniTask<GameObject> GenerateBlock(BlockData data)
     {
         await UniTask.Delay(TimeSpan.FromSeconds(2));

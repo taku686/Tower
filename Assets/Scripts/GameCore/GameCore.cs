@@ -3,7 +3,6 @@ using DefaultNamespace;
 using Manager.DataManager;
 using Photon;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public partial class GameCore : MonoBehaviour
 {
@@ -25,6 +24,7 @@ public partial class GameCore : MonoBehaviour
     [SerializeField] private GameOverLine gameOverLine;
     [SerializeField] private List<GameObject> uiObjects = new();
     private bool _isOnLine;
+    private bool _isMyTurn;
 
     private enum Event
     {

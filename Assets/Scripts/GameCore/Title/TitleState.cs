@@ -26,6 +26,8 @@ public partial class GameCore
             _titleView = Owner.titleView;
             _stateMachine = Owner._stateMachine;
             _userDataManager = Owner.userDataManager;
+            Owner.blockFactory.ResetBlockParent();
+            Owner.gameOverLine.Setup();
             if (Camera.main != null) Camera.main.transform.localPosition = new Vector3(0, 0, -10);
             await Login();
             InitializeButton();
