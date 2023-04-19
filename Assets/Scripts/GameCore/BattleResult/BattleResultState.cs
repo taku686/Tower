@@ -44,8 +44,8 @@ public partial class GameCore
 
         private void SetUpUiContent()
         {
-            _battleResultView.resultImage.color = !Owner._isMyTurn ? WinColor : LoseColor;
-            _battleResultView.resultText.text = !Owner._isMyTurn ? WinText : LoseText;
+            _battleResultView.resultImage.color = Owner._isMyTurn ? WinColor : LoseColor;
+            _battleResultView.resultText.text = Owner._isMyTurn ? WinText : LoseText;
         }
 
         private void OnClickBack()

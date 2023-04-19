@@ -18,10 +18,7 @@ public partial class GameCore
         private PhotonManager _photonManager;
         private BlockFactory _blockFactory;
         private BlockDataManager _blockDataManager;
-
         private CancellationTokenSource _cancellationTokenSource;
-
-        //  private bool _isMyTurn;
         private BlockGameObject _currentBlockObj;
         private GameOverLine _gameOverLine;
         private StateMachine<GameCore> _stateMachine;
@@ -105,10 +102,12 @@ public partial class GameCore
             {
                 if (!Owner._isMyTurn)
                 {
+                    Debug.Log("turn change");
                     _battleView.turnText.text = EnemyTurnText;
                     Owner._isMyTurn = !Owner._isMyTurn;
                     return;
                 }
+
 
                 _battleView.turnText.text = MyTurnText;
                 var blockData = _blockDataManager.GetBlockData(index);
@@ -121,9 +120,9 @@ public partial class GameCore
                         return;
                     }
 
+                    //  Owner._isMyTurn = !Owner._isMyTurn;
                     var blockIndex = _blockDataManager.GetRandomBlockData().Id;
                     PhotonNetwork.CurrentRoom.SetBlockIndex(blockIndex);
-                    Owner._isMyTurn = !Owner._isMyTurn;
                 }).AddTo(_cancellationTokenSource.Token);
             })).AddTo(_cancellationTokenSource.Token);
 
@@ -159,6 +158,7 @@ public partial class GameCore
             var rigid = blockSc.GetComponent<Rigidbody2D>();
             rigid.gravityScale = 1;
             _currentBlockObj = null;
+            Owner._isMyTurn = !Owner._isMyTurn;
             await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
             blockSc.BlockStateReactiveProperty.Value = BlockSate.Moving;
         }
