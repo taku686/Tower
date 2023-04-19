@@ -8,6 +8,7 @@ using Photon;
 using Photon.Pun;
 using UniRx;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using State = StateMachine<GameCore>.State;
 
 public partial class GameCore
@@ -25,6 +26,8 @@ public partial class GameCore
         private int _battleEndCount;
         private const string MyTurnText = "あなたの番";
         private const string EnemyTurnText = "相手の番";
+        private float _time;
+        private bool _push;
 
         protected override void OnEnter(State prevState)
         {
@@ -45,8 +48,19 @@ public partial class GameCore
                 return;
             }
 
+            if (_push)
+            {
+                _time = Time.deltaTime;
+                SuccessiveRotate();
+            }
+
             if (Input.GetMouseButton(0) && Owner._isMyTurn)
             {
+                if (_push)
+                {
+                    return;
+                }
+
                 var mousePos = Input.mousePosition;
                 _currentBlockObj.BlockStateReactiveProperty.Value = BlockSate.Operating;
                 if (Camera.main != null)
@@ -92,8 +106,22 @@ public partial class GameCore
 
         private void InitializeButton()
         {
-            _battleView.rotateButton.onClick.RemoveAllListeners();
-            _battleView.rotateButton.onClick.AddListener(OnClickRotate);
+            /*_battleView.rotateButton.onClick.RemoveAllListeners();
+            _battleView.rotateButton.onClick.AddListener(OnClickRotate);*/
+            EventTrigger trigger = _battleView.rotateButton.GetComponent<EventTrigger>();
+            trigger.triggers.RemoveRange(0, trigger.triggers.Count);
+            EventTrigger.Entry entry = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerDown
+            };
+            entry.callback.AddListener((eventDate) => { OnClickPushDown(); });
+            trigger.triggers.Add(entry);
+            EventTrigger.Entry entry1 = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerUp
+            };
+            entry1.callback.AddListener((eventDate) => { OnClickPushUp(); });
+            trigger.triggers.Add(entry1);
         }
 
         private void InitializeSubscribe()
@@ -102,7 +130,6 @@ public partial class GameCore
             {
                 if (!Owner._isMyTurn)
                 {
-                    Debug.Log("turn change");
                     _battleView.turnText.text = EnemyTurnText;
                     Owner._isMyTurn = !Owner._isMyTurn;
                     return;
@@ -120,7 +147,6 @@ public partial class GameCore
                         return;
                     }
 
-                    //  Owner._isMyTurn = !Owner._isMyTurn;
                     var blockIndex = _blockDataManager.GetRandomBlockData().Id;
                     PhotonNetwork.CurrentRoom.SetBlockIndex(blockIndex);
                 }).AddTo(_cancellationTokenSource.Token);
@@ -170,8 +196,47 @@ public partial class GameCore
                 return;
             }
 
+            SoundManager.Instance.DecideSe();
             _currentBlockObj.BlockStateReactiveProperty.Value = BlockSate.Rotating;
-            _currentBlockObj.transform.localEulerAngles += new Vector3(0, 0, 45);
+            var transform1 = _currentBlockObj.transform;
+            transform1.localPosition = new Vector3(0, transform1.localPosition.y, 0);
+            transform1.Rotate(Vector3.forward, 45);
+        }
+
+        private void OnClickPushDown()
+        {
+            if (!Owner._isMyTurn || _currentBlockObj == null)
+            {
+                return;
+            }
+
+            _push = true;
+            SoundManager.Instance.DecideSe();
+            _currentBlockObj.BlockStateReactiveProperty.Value = BlockSate.Rotating;
+            var transform1 = _currentBlockObj.transform;
+            transform1.localPosition = new Vector3(0, transform1.localPosition.y, 0);
+        }
+
+        private void OnClickPushUp()
+        {
+            if (!Owner._isMyTurn || _currentBlockObj == null)
+            {
+                return;
+            }
+
+            _push = false;
+            var transform1 = _currentBlockObj.transform;
+            transform1.localPosition = new Vector3(0, transform1.localPosition.y, 0);
+        }
+
+        private void SuccessiveRotate()
+        {
+            if (!Owner._isMyTurn || _currentBlockObj == null)
+            {
+                return;
+            }
+
+            _currentBlockObj.transform.localEulerAngles += new Vector3(0f, 0f, _time * 50);
         }
 
         private void DestroyAllBlock()

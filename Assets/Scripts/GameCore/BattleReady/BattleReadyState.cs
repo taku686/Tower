@@ -68,6 +68,7 @@ public partial class GameCore
 
         private void OnClickBack()
         {
+            SoundManager.Instance.CancelSe();
             _photonManager.OnLeftRoom();
             _stateMachine.Dispatch((int)Event.BattleModeSelect);
         }

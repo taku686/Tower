@@ -50,6 +50,7 @@ public partial class GameCore
 
         private void OnClickBack()
         {
+            SoundManager.Instance.DecideSe();
             _stateMachine.Dispatch((int)Event.Title);
         }
     }

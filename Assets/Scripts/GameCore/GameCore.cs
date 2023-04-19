@@ -60,13 +60,12 @@ public partial class GameCore : MonoBehaviour
     {
         _stateMachine = new StateMachine<GameCore>(this);
         _stateMachine.Start<TitleState>();
+        _stateMachine.AddAnyTransition<TitleState>((int)Event.Title);
         _stateMachine.AddTransition<TitleState, BattleModeSelectState>((int)Event.BattleModeSelect);
         _stateMachine.AddTransition<BattleReadyState, BattleModeSelectState>((int)Event.BattleModeSelect);
         _stateMachine.AddTransition<BattleModeSelectState, BattleReadyState>((int)Event.BattleReady);
         _stateMachine.AddTransition<BattleReadyState, BattleState>((int)Event.Battle);
         _stateMachine.AddTransition<BattleState, BattleResultState>((int)Event.BattleResult);
-        _stateMachine.AddTransition<BattleResultState, TitleState>((int)Event.Title);
-        _stateMachine.AddTransition<NameChangeState, TitleState>((int)Event.Title);
         _stateMachine.AddTransition<TitleState, NameChangeState>((int)Event.NameChange);
     }
 

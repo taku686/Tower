@@ -24,20 +24,30 @@ public partial class GameCore
         {
             _battleModeSelectView.singleModeButton.onClick.RemoveAllListeners();
             _battleModeSelectView.multiModeButton.onClick.RemoveAllListeners();
+            _battleModeSelectView.backButton.onClick.RemoveAllListeners();
             _battleModeSelectView.singleModeButton.onClick.AddListener(OnClickSingleMode);
             _battleModeSelectView.multiModeButton.onClick.AddListener(OnClickMultiMode);
+            _battleModeSelectView.backButton.onClick.AddListener(OnClickBack);
         }
 
         private void OnClickSingleMode()
         {
+            SoundManager.Instance.DecideSe();
             Owner._isOnLine = false;
             _stateMachine.Dispatch((int)Event.BattleReady);
         }
 
         private void OnClickMultiMode()
         {
+            SoundManager.Instance.DecideSe();
             Owner._isOnLine = true;
             _stateMachine.Dispatch((int)Event.BattleReady);
+        }
+
+        private void OnClickBack()
+        {
+            SoundManager.Instance.CancelSe();
+            _stateMachine.Dispatch((int)Event.Title);
         }
     }
 }

@@ -56,11 +56,13 @@ public partial class GameCore
 
         private void OnClickStart()
         {
+            SoundManager.Instance.DecideSe();
             _stateMachine.Dispatch((int)Event.BattleModeSelect);
         }
 
         private void OnClickNameChange()
         {
+            SoundManager.Instance.DecideSe();
             _stateMachine.Dispatch((int)Event.NameChange);
         }
 
@@ -69,7 +71,6 @@ public partial class GameCore
             var result = await _playFabLoginManager.Login();
             if (!result)
             {
-                Debug.Log("失敗");
                 return false;
             }
 

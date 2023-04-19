@@ -32,6 +32,7 @@ public partial class GameCore
 
         private async UniTask OnClickCloseView()
         {
+            SoundManager.Instance.DecideSe();
             var name = _nameChangeView.inputField.text;
             var result = await _userDataManager.SetUserName(name);
             if (!result)
