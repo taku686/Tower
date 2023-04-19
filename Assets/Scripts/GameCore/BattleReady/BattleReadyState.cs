@@ -62,6 +62,7 @@ public partial class GameCore
 
             if (PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers)
             {
+                PhotonNetwork.CurrentRoom.IsOpen = false;
                 _stateMachine.Dispatch((int)Event.Battle);
             }
         }

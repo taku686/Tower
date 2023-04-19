@@ -14,7 +14,7 @@
         public const string BlockTag = "Block";
         public const string GroundTag = "Ground";
         public const int ErrorCode = 999;
-        public const float AmountOfRise = 1.8f;
+        public const float AmountOfRise = 2.12f;
         public const int MaxNameCount = 8;
     }
 }

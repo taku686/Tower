@@ -10,10 +10,16 @@ public class BlockFactory : MonoBehaviour
     [SerializeField] private Transform blockParent;
     [SerializeField] private PhysicsMaterial2D material;
     private int _count;
+    private Vector3 _initPos;
 
     public void ResetBlockParent()
     {
-        blockParent.localPosition = new Vector3(0, 1.12f, 0);
+        if (_initPos == Vector3.zero)
+        {
+            _initPos = blockParent.localPosition;
+        }
+
+        blockParent.localPosition = _initPos;
     }
 
     public async UniTask<GameObject> GenerateBlock(BlockData data)
