@@ -33,7 +33,8 @@ public partial class GameCore : MonoBehaviour
         BattleReady,
         Battle,
         BattleResult,
-        NameChange
+        NameChange,
+        BattleSingle
     }
 
     private void Start()
@@ -65,7 +66,9 @@ public partial class GameCore : MonoBehaviour
         _stateMachine.AddTransition<BattleReadyState, BattleModeSelectState>((int)Event.BattleModeSelect);
         _stateMachine.AddTransition<BattleModeSelectState, BattleReadyState>((int)Event.BattleReady);
         _stateMachine.AddTransition<BattleReadyState, BattleState>((int)Event.Battle);
+        _stateMachine.AddTransition<BattleReadyState, BattleSingleState>((int)Event.BattleSingle);
         _stateMachine.AddTransition<BattleState, BattleResultState>((int)Event.BattleResult);
+        _stateMachine.AddTransition<BattleSingleState, BattleResultState>((int)Event.BattleResult);
         _stateMachine.AddTransition<TitleState, NameChangeState>((int)Event.NameChange);
     }
 
