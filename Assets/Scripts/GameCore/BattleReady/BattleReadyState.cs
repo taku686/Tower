@@ -26,7 +26,7 @@ public partial class GameCore
             if (!Owner._isOnLine)
             {
                 PhotonNetwork.OfflineMode = true;
-                _stateMachine.Dispatch((int)Event.Battle);
+                _stateMachine.Dispatch((int)Event.BattleSingle);
             }
 
             if (Owner._isOnLine && !_isProcessing)

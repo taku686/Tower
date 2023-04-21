@@ -14,10 +14,8 @@ namespace Photon
         private readonly Subject<int> _generateBlock = new();
         private readonly Subject<int> _battleEnd = new();
         public Subject<int> GenerateBlock => _generateBlock;
-
         public Subject<int> ChangeIndex => _changeIndex;
         public Subject<int> BattleEnd => _battleEnd;
-
         public Subject<Unit> ChangeTurn => _changeTurn;
 
 
