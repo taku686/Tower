@@ -169,7 +169,7 @@ public partial class GameCore
 
         private void OnClickPushDown()
         {
-            if (!Owner._isMyTurn || _currentBlockObj == null)
+            if (_currentBlockObj == null)
             {
                 return;
             }
@@ -183,7 +183,7 @@ public partial class GameCore
 
         private void OnClickPushUp()
         {
-            if (!Owner._isMyTurn || _currentBlockObj == null)
+            if (_currentBlockObj == null)
             {
                 return;
             }
@@ -195,7 +195,7 @@ public partial class GameCore
 
         private void SuccessiveRotate()
         {
-            if (!Owner._isMyTurn || _currentBlockObj == null)
+            if (_currentBlockObj == null)
             {
                 return;
             }
