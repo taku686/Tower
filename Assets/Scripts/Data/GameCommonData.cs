@@ -4,7 +4,9 @@
     {
         public const string TitleId = "4C89B";
         public const string BlockMasterDataKey = "BlockMasterData";
-        public const string BlockSpritePass = "Sprite/JapaneseCharacter/";
+        public const string StageMasterDataKey = "StageMasterData";
+        public const string BlockSpritePass = "Sprite/Blocks/";
+        public const string StageSpritePass = "Sprite/Stage/";
         public const string BlockPrefabPass = "Prefab/JapaneseCharacter/";
         public const string IsMyTurnKey = "Turn";
         public const string BlockIndexKey = "Index";
