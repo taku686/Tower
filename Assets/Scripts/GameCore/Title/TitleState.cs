@@ -14,10 +14,19 @@ public partial class GameCore
         private TitleView _titleView;
         private StateMachine<GameCore> _stateMachine;
         private UserDataManager _userDataManager;
+        private bool _isNameNullOrEmpty;
 
         protected override void OnEnter(State prevState)
         {
             Initialize().Forget();
+        }
+
+        protected override void OnUpdate()
+        {
+            if (_isNameNullOrEmpty)
+            {
+                _stateMachine.Dispatch((int)Event.NameChange);
+            }
         }
 
         private async UniTask Initialize()
@@ -26,6 +35,7 @@ public partial class GameCore
             _titleView = Owner.titleView;
             _stateMachine = Owner._stateMachine;
             _userDataManager = Owner.userDataManager;
+            _isNameNullOrEmpty = false;
             Owner.blockFactory.ResetBlockParent();
             Owner.gameOverLine.Setup();
             if (Camera.main != null) Camera.main.transform.localPosition = new Vector3(0, 0, -10);
@@ -71,15 +81,19 @@ public partial class GameCore
             var result = await _playFabLoginManager.Login();
             if (!result)
             {
+                Debug.Log("ログイン失敗");
                 return false;
             }
 
             var userName = await _userDataManager.GetUserName();
+            Debug.Log(userName);
             if (string.IsNullOrEmpty(userName))
             {
-                _stateMachine.Dispatch((int)Event.NameChange);
+                _isNameNullOrEmpty = true;
+                return false;
             }
 
+            Debug.Log("ログイン成功");
             return true;
         }
     }

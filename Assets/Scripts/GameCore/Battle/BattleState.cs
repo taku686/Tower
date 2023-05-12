@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using Block;
 using Cysharp.Threading.Tasks;
@@ -28,6 +31,8 @@ public partial class GameCore
         private const string EnemyTurnText = "相手の番";
         private float _time;
         private bool _push;
+        private bool _isAllBlockStop;
+        private int _blockCount;
 
         protected override void OnEnter(State prevState)
         {
@@ -52,6 +57,13 @@ public partial class GameCore
             {
                 _time = Time.deltaTime;
                 SuccessiveRotate();
+            }
+
+            if (_isAllBlockStop)
+            {
+                _isAllBlockStop = false;
+                var blockIndex = _blockDataManager.GetRandomBlockData().Id;
+                PhotonNetwork.CurrentRoom.SetBlockIndex(blockIndex);
             }
 
             if (Input.GetMouseButton(0) && Owner._isMyTurn)
@@ -88,6 +100,8 @@ public partial class GameCore
             _blockFactory = Owner.blockFactory;
             _gameOverLine = Owner.gameOverLine;
             _stateMachine = Owner._stateMachine;
+            _isAllBlockStop = false;
+            _blockCount = 0;
             InitializeButton();
             InitializeSubscribe();
             _battleView.turnText.gameObject.SetActive(true);
@@ -139,16 +153,25 @@ public partial class GameCore
                 var blockData = _blockDataManager.GetBlockData(index);
                 var block = await _blockFactory.GenerateBlock(blockData);
                 _currentBlockObj = block.GetComponent<BlockGameObject>();
-                _currentBlockObj.BlockStateReactiveProperty.Subscribe(state =>
+                var blocks = GameObject.FindGameObjectsWithTag(GameCommonData.BlockTag).ToList();
+                blocks.Add(block);
+                foreach (var blockObj in blocks)
                 {
-                    if (state != BlockSate.Stop)
+                    var blockGameObjectSc = blockObj.GetComponent<BlockGameObject>();
+                    blockGameObjectSc.BlockStateReactiveProperty.Subscribe(state =>
                     {
-                        return;
-                    }
+                        if (state != BlockSate.Stop)
+                        {
+                            return;
+                        }
 
-                    var blockIndex = _blockDataManager.GetRandomBlockData().Id;
-                    PhotonNetwork.CurrentRoom.SetBlockIndex(blockIndex);
-                }).AddTo(_cancellationTokenSource.Token);
+                        _blockCount++;
+                        if (_blockCount == blocks.Count)
+                        {
+                            _isAllBlockStop = true;
+                        }
+                    }).AddTo(_cancellationTokenSource.Token);
+                }
             })).AddTo(_cancellationTokenSource.Token);
 
             _gameOverLine.GameEnd.Skip(1).Subscribe(value => { PhotonNetwork.CurrentRoom.SetBattleEnd(1); })
