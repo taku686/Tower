@@ -51,13 +51,6 @@ public partial class GameCore
                 SuccessiveRotate();
             }
 
-            if (_isAllBlockStop)
-            {
-                _isAllBlockStop = false;
-                var blockIndex = _blockDataManager.GetRandomBlockData().Id;
-                _nextBlock.OnNext(blockIndex);
-            }
-
             if (Input.GetMouseButton(0))
             {
                 if (_push)
@@ -127,27 +120,12 @@ public partial class GameCore
                 var blockData = _blockDataManager.GetBlockData(index);
                 var block = await _blockFactory.GenerateBlock(blockData);
                 _currentBlockObj = block.GetComponent<BlockGameObject>();
-                /*_currentBlockObj.BlockStateReactiveProperty.Subscribe(state =>
-                {
-                    if (state != BlockSate.Stop)
-                    {
-                        return;
-                    }
-
-                    var blockIndex = _blockDataManager.GetRandomBlockData().Id;
-                    _nextBlock.OnNext(blockIndex);
-                }).AddTo(_cancellationTokenSource.Token);*/
                 var blocks = GameObject.FindGameObjectsWithTag(GameCommonData.BlockTag).ToList();
                 foreach (var blockObj in blocks)
                 {
                     var blockGameObjectSc = blockObj.GetComponent<BlockGameObject>();
                     blockGameObjectSc.BlockStateReactiveProperty.Subscribe(state =>
                     {
-                        /*if (state == BlockSate.ReMoVe)
-                        {
-                            _blockCount--;
-                        }*/
-
                         if (state != BlockSate.Stop)
                         {
                             return;

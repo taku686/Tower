@@ -5,7 +5,12 @@ public class UserData : IDisposable
 {
     public string Name;
     public int WinCount;
-    public int ContinuityWinCount;
+    public int LoseCount;
+    public int Rate;
+    public int IconIndex;
+    public Sprite IconImage;
+    public int CurrentContinuityWinCount;
+    public int MaxContinuityWinCount;
 
     public void Dispose()
     {

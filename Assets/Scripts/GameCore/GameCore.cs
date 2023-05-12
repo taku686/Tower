@@ -25,6 +25,7 @@ public partial class GameCore : MonoBehaviour
     [SerializeField] private List<GameObject> uiObjects = new();
     private bool _isOnLine;
     private bool _isMyTurn;
+    private int _overlapBlockCount;
 
     private enum Event
     {
@@ -51,6 +52,7 @@ public partial class GameCore : MonoBehaviour
 
     private void Initialize()
     {
+        photonManager.Initialize(userDataManager);
         userDataManager.Initialize(playFabUserDataManager);
         playFabTitleDataManager.Initialize(blockDataManager);
         playFabLoginManager.Initialize(playFabTitleDataManager, userDataManager);
