@@ -26,6 +26,7 @@ public partial class GameCore
         private BlockGameObject _currentBlockObj;
         private GameOverLine _gameOverLine;
         private StateMachine<GameCore> _stateMachine;
+        private UserDataManager _userDataManager;
         private int _battleEndCount;
         private const string MyTurnText = "あなたの番";
         private const string EnemyTurnText = "相手の番";
@@ -57,13 +58,6 @@ public partial class GameCore
             {
                 _time = Time.deltaTime;
                 SuccessiveRotate();
-            }
-
-            if (_isAllBlockStop)
-            {
-                _isAllBlockStop = false;
-                var blockIndex = _blockDataManager.GetRandomBlockData().Id;
-                PhotonNetwork.CurrentRoom.SetBlockIndex(blockIndex);
             }
 
             if (Input.GetMouseButton(0) && Owner._isMyTurn)
@@ -100,6 +94,7 @@ public partial class GameCore
             _blockFactory = Owner.blockFactory;
             _gameOverLine = Owner.gameOverLine;
             _stateMachine = Owner._stateMachine;
+            _userDataManager = Owner.userDataManager;
             _isAllBlockStop = false;
             _blockCount = 0;
             InitializeButton();
@@ -139,8 +134,14 @@ public partial class GameCore
 
         private void InitializeSubscribe()
         {
+            _photonManager.EnemyRate.Subscribe(rate => { _userDataManager.SetEnemyRate(rate); })
+                .AddTo(_cancellationTokenSource.Token);
+
             _photonManager.ChangeIndex.Subscribe(index => UniTask.Void(async () =>
             {
+                _blockCount = 0;
+                var blocks = GameObject.FindGameObjectsWithTag(GameCommonData.BlockTag).ToList();
+                Owner._overlapBlockCount = blocks.Count;
                 if (!Owner._isMyTurn)
                 {
                     _battleView.turnText.text = EnemyTurnText;
@@ -153,7 +154,6 @@ public partial class GameCore
                 var blockData = _blockDataManager.GetBlockData(index);
                 var block = await _blockFactory.GenerateBlock(blockData);
                 _currentBlockObj = block.GetComponent<BlockGameObject>();
-                var blocks = GameObject.FindGameObjectsWithTag(GameCommonData.BlockTag).ToList();
                 blocks.Add(block);
                 foreach (var blockObj in blocks)
                 {
@@ -168,7 +168,8 @@ public partial class GameCore
                         _blockCount++;
                         if (_blockCount == blocks.Count)
                         {
-                            _isAllBlockStop = true;
+                            var blockIndex = _blockDataManager.GetRandomBlockData().Id;
+                            PhotonNetwork.CurrentRoom.SetBlockIndex(blockIndex);
                         }
                     }).AddTo(_cancellationTokenSource.Token);
                 }
