@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using UnityEngine;
 using State = StateMachine<GameCore>.State;
 
 public partial class GameCore
@@ -37,6 +38,7 @@ public partial class GameCore
             var result = await _userDataManager.SetUserName(name);
             if (!result)
             {
+                Debug.Log("名前が適切ではありません。");
                 return;
             }
 
