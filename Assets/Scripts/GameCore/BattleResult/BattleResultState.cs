@@ -11,7 +11,7 @@ public partial class GameCore
         private BattleResultView _battleResultView;
         private StateMachine<GameCore> _stateMachine;
         private static readonly Color WinColor = Color.red;
-        private static readonly Color LoseColor = Color.green;
+        private static readonly Color LoseColor = Color.blue;
         private const string WinText = "Win";
         private const string LoseText = "Lose";
 
@@ -44,7 +44,7 @@ public partial class GameCore
 
         private void SetUpUiContent()
         {
-            _battleResultView.resultImage.color = Owner._isMyTurn ? WinColor : LoseColor;
+            _battleResultView.resultText.color = Owner._isMyTurn ? WinColor : LoseColor;
             _battleResultView.resultText.text = Owner._isMyTurn ? WinText : LoseText;
         }
 

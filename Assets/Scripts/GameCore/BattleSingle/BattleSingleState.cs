@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using Block;
 using Cysharp.Threading.Tasks;
@@ -23,6 +24,8 @@ public partial class GameCore
         private float _time;
         private bool _push;
         private readonly Subject<int> _nextBlock = new();
+        private bool _isAllBlockStop;
+        private int _blockCount;
 
         protected override void OnEnter(State prevState)
         {
@@ -46,6 +49,13 @@ public partial class GameCore
             {
                 _time = Time.deltaTime;
                 SuccessiveRotate();
+            }
+
+            if (_isAllBlockStop)
+            {
+                _isAllBlockStop = false;
+                var blockIndex = _blockDataManager.GetRandomBlockData().Id;
+                _nextBlock.OnNext(blockIndex);
             }
 
             if (Input.GetMouseButton(0))
@@ -81,6 +91,8 @@ public partial class GameCore
             _blockFactory = Owner.blockFactory;
             _gameOverLine = Owner.gameOverLine;
             _stateMachine = Owner._stateMachine;
+            _isAllBlockStop = false;
+            _blockCount = 0;
             InitializeButton();
             InitializeSubscribe();
             _battleView.turnText.gameObject.SetActive(false);
@@ -111,10 +123,11 @@ public partial class GameCore
         {
             _nextBlock.Subscribe(index => UniTask.Void(async () =>
             {
+                _blockCount = 0;
                 var blockData = _blockDataManager.GetBlockData(index);
                 var block = await _blockFactory.GenerateBlock(blockData);
                 _currentBlockObj = block.GetComponent<BlockGameObject>();
-                _currentBlockObj.BlockStateReactiveProperty.Subscribe(state =>
+                /*_currentBlockObj.BlockStateReactiveProperty.Subscribe(state =>
                 {
                     if (state != BlockSate.Stop)
                     {
@@ -123,7 +136,33 @@ public partial class GameCore
 
                     var blockIndex = _blockDataManager.GetRandomBlockData().Id;
                     _nextBlock.OnNext(blockIndex);
-                }).AddTo(_cancellationTokenSource.Token);
+                }).AddTo(_cancellationTokenSource.Token);*/
+                var blocks = GameObject.FindGameObjectsWithTag(GameCommonData.BlockTag).ToList();
+                foreach (var blockObj in blocks)
+                {
+                    var blockGameObjectSc = blockObj.GetComponent<BlockGameObject>();
+                    blockGameObjectSc.BlockStateReactiveProperty.Subscribe(state =>
+                    {
+                        /*if (state == BlockSate.ReMoVe)
+                        {
+                            _blockCount--;
+                        }*/
+
+                        if (state != BlockSate.Stop)
+                        {
+                            return;
+                        }
+
+                        _blockCount++;
+                        Debug.Log(blockObj.name + " stop " + "_blocksCount " + _blockCount + " blockCount" +
+                                  blocks.Count);
+                        if (_blockCount == blocks.Count)
+                        {
+                            var blockIndex = _blockDataManager.GetRandomBlockData().Id;
+                            _nextBlock.OnNext(blockIndex);
+                        }
+                    }).AddTo(_cancellationTokenSource.Token);
+                }
             })).AddTo(_cancellationTokenSource.Token);
 
             _gameOverLine.GameEnd.Subscribe(value =>
