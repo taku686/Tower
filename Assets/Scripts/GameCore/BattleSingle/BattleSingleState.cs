@@ -130,10 +130,9 @@ public partial class GameCore
                         }
 
                         _blockCount++;
-                        /*Debug.Log(blockObj.name + " stop " + "_blocksCount " + _blockCount + " blockCount" +
-                                  blocks.Count);*/
                         if (_blockCount == blocks.Count)
                         {
+                            Owner._overlapBlockCount = blocks.Count;
                             var blockIndex = _blockDataManager.GetRandomBlockData().Id;
                             _nextBlock.OnNext(blockIndex);
                         }
@@ -144,7 +143,7 @@ public partial class GameCore
             _gameOverLine.GameEnd.Subscribe(value =>
             {
                 DestroyAllBlock();
-                _stateMachine.Dispatch((int)Event.BattleResult);
+                _stateMachine.Dispatch((int)Event.SingleBattleResult);
             }).AddTo(_cancellationTokenSource.Token);
         }
 

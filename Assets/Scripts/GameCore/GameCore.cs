@@ -21,6 +21,7 @@ public partial class GameCore : MonoBehaviour
     [SerializeField] private BattleView battleView;
     [SerializeField] private BattleResultView battleResultView;
     [SerializeField] private NameChangeView nameChangeView;
+    [SerializeField] private SingleBattleResultView singleBattleResultView;
     [SerializeField] private BlockFactory blockFactory;
     [SerializeField] private GameOverLine gameOverLine;
     [SerializeField] private List<GameObject> uiObjects = new();
@@ -39,7 +40,8 @@ public partial class GameCore : MonoBehaviour
         Battle,
         BattleResult,
         NameChange,
-        BattleSingle
+        SingleBattleResult,
+        BattleSingle,
     }
 
     private void Start()
@@ -74,7 +76,7 @@ public partial class GameCore : MonoBehaviour
         _stateMachine.AddTransition<BattleReadyState, BattleState>((int)Event.Battle);
         _stateMachine.AddTransition<BattleReadyState, BattleSingleState>((int)Event.BattleSingle);
         _stateMachine.AddTransition<BattleState, BattleResultState>((int)Event.BattleResult);
-        _stateMachine.AddTransition<BattleSingleState, BattleResultState>((int)Event.BattleResult);
+        _stateMachine.AddTransition<BattleSingleState, SingleBattleResultState>((int)Event.SingleBattleResult);
         _stateMachine.AddTransition<TitleState, NameChangeState>((int)Event.NameChange);
     }
 

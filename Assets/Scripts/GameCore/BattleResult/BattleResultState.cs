@@ -24,6 +24,7 @@ public partial class GameCore
 
         protected override void OnExit(State nextState)
         {
+            Owner._overlapBlockCount = 0;
             Owner._isMyTurn = false;
         }
 

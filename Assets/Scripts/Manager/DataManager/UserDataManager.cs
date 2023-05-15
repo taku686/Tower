@@ -186,6 +186,21 @@ public class UserDataManager : MonoBehaviour
         }
     }
 
+    public void SetBlockCount(int count)
+    {
+        if (count <= _userData.blockCount)
+        {
+            return;
+        }
+
+        _userData.blockCount = count;
+    }
+
+    public int GetBlockCount()
+    {
+        return _userData.blockCount;
+    }
+
     public int GetMaxContinuityWinCount()
     {
         return _userData.MaxContinuityWinCount;
@@ -213,7 +228,8 @@ public class UserDataManager : MonoBehaviour
             Rate = 0,
             IconIndex = 0,
             MaxContinuityWinCount = 0,
-            CurrentContinuityWinCount = 0
+            CurrentContinuityWinCount = 0,
+            blockCount = 0
         };
         PlayerPrefs.SetString(GameCommonData.UserKey, "");
         _userData = userData;
