@@ -8,30 +8,43 @@ using UnityEngine;
 public class PlayFabTitleDataManager : MonoBehaviour
 {
     private BlockDataManager _blockDataManager;
+    private StageDataManager _stageDataManager;
 
-    public void Initialize(BlockDataManager blockDataManager)
+    public void Initialize(BlockDataManager blockDataManager, StageDataManager stageDataManager)
     {
         _blockDataManager = blockDataManager;
+        _stageDataManager = stageDataManager;
     }
 
     public async UniTask SetTitleData(Dictionary<string, string> titleDatum)
     {
         var blockDatum = JsonConvert.DeserializeObject<BlockData[]>(titleDatum[GameCommonData.BlockMasterDataKey]);
         await SetBlockDataManager(blockDatum);
+        var stageDatum = JsonConvert.DeserializeObject<StageData[]>(titleDatum[GameCommonData.StageMasterDataKey]);
+        await SetStageDataManager(stageDatum);
     }
 
     private async UniTask SetBlockDataManager(BlockData[] blockDatum)
     {
         foreach (var data in blockDatum)
         {
-            var sprite = await Resources.LoadAsync<Sprite>(GameCommonData.BlockSpritePass + data.Name);
-            if (sprite == null)
+            _blockDataManager.AddBlockData(data);
+        }
+    }
+
+    private async UniTask SetStageDataManager(StageData[] stageDatum)
+    {
+        foreach (var data in stageDatum)
+        {
+            var obj =
+                await Resources.LoadAsync<GameObject>(GameCommonData.StagePrefabPass + data.Stage + "/" + data.Name);
+            if (obj == null)
             {
                 continue;
             }
 
-            data.BlockSprite = (Sprite)sprite;
-            _blockDataManager.AddBlockData(data);
+            data.StageObj = (GameObject)obj;
+            _stageDataManager.AddStageData(data);
         }
     }
 }
