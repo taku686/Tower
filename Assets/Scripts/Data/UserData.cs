@@ -11,6 +11,7 @@ public class UserData : IDisposable
     public Sprite IconImage;
     public int CurrentContinuityWinCount;
     public int MaxContinuityWinCount;
+    public int blockCount;
 
     public void Dispose()
     {
