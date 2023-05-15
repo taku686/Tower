@@ -1,4 +1,5 @@
-﻿using Data;
+﻿using System;
+using Data;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -10,6 +11,7 @@ namespace Photon
     public class PhotonManager : MonoBehaviourPunCallbacks
     {
         private UserDataManager _userDataManager;
+        private Action _stageGenerateCallBack;
         private readonly Subject<Unit> _changeTurn = new();
         private readonly Subject<int> _changeIndex = new();
         private readonly Subject<int> _generateBlock = new();
@@ -25,6 +27,11 @@ namespace Photon
         public void Initialize(UserDataManager userDataManager)
         {
             _userDataManager = userDataManager;
+        }
+
+        public void SetStageGenerateCallBack(Action callBack)
+        {
+            _stageGenerateCallBack = callBack;
         }
 
 
@@ -55,6 +62,7 @@ namespace Photon
         public override void OnJoinedRoom()
         {
             var rate = _userDataManager.GetRate();
+            _stageGenerateCallBack?.Invoke();
             PhotonNetwork.LocalPlayer.SetEnemyRate(rate);
         }
 

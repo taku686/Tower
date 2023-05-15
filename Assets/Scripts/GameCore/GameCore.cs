@@ -12,6 +12,7 @@ public partial class GameCore : MonoBehaviour
     [SerializeField] private PlayFabTitleDataManager playFabTitleDataManager;
     [SerializeField] private PlayFabUserDataManager playFabUserDataManager;
     [SerializeField] private BlockDataManager blockDataManager;
+    [SerializeField] private StageDataManager stageDataManager;
     [SerializeField] private PhotonManager photonManager;
     [SerializeField] private UserDataManager userDataManager;
     [SerializeField] private TitleView titleView;
@@ -23,9 +24,12 @@ public partial class GameCore : MonoBehaviour
     [SerializeField] private BlockFactory blockFactory;
     [SerializeField] private GameOverLine gameOverLine;
     [SerializeField] private List<GameObject> uiObjects = new();
+    [SerializeField] private Transform stageParent;
     private bool _isOnLine;
     private bool _isMyTurn;
     private int _overlapBlockCount;
+    private GameObject _stageObj;
+
 
     private enum Event
     {
@@ -54,7 +58,7 @@ public partial class GameCore : MonoBehaviour
     {
         photonManager.Initialize(userDataManager);
         userDataManager.Initialize(playFabUserDataManager);
-        playFabTitleDataManager.Initialize(blockDataManager);
+        playFabTitleDataManager.Initialize(blockDataManager, stageDataManager);
         playFabLoginManager.Initialize(playFabTitleDataManager, userDataManager);
         titleView.Initialize();
     }
