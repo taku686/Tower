@@ -32,7 +32,6 @@ public partial class GameCore
         private const string EnemyTurnText = "相手の番";
         private float _time;
         private bool _push;
-        private bool _isAllBlockStop;
         private int _blockCount;
 
         protected override void OnEnter(State prevState)
@@ -95,7 +94,6 @@ public partial class GameCore
             _gameOverLine = Owner.gameOverLine;
             _stateMachine = Owner._stateMachine;
             _userDataManager = Owner.userDataManager;
-            _isAllBlockStop = false;
             _blockCount = 0;
             InitializeButton();
             InitializeSubscribe();
@@ -151,7 +149,7 @@ public partial class GameCore
 
 
                 _battleView.turnText.text = MyTurnText;
-                var blockData = _blockDataManager.GetBlockData(index);
+                var blockData = _blockDataManager.GetBlockData(index, 3);
                 var block = await _blockFactory.GenerateBlock(blockData);
                 _currentBlockObj = block.GetComponent<BlockGameObject>();
                 blocks.Add(block);

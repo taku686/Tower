@@ -6,7 +6,6 @@ public class BlockData : IDisposable
     public readonly string Name;
     public readonly int Id;
     public readonly int Stage;
-    public Sprite BlockSprite;
 
     public BlockData(string name, int id, int stage)
     {

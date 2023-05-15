@@ -34,6 +34,7 @@ public partial class GameCore
             _battleResultView = Owner.battleResultView;
             _stateMachine = Owner._stateMachine;
             _userDataManager = Owner.userDataManager;
+            Destroy(Owner._stageObj);
             InitializeButton();
             await SetResultData();
             SetUpUiContent();

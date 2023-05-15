@@ -78,6 +78,11 @@ public partial class GameCore
 
         private async UniTask<bool> Login()
         {
+            if (PlayFabClientAPI.IsClientLoggedIn())
+            {
+                return true;
+            }
+
             var result = await _playFabLoginManager.Login();
             if (!result)
             {

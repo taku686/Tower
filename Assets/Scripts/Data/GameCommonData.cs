@@ -6,8 +6,8 @@
         public const string BlockMasterDataKey = "BlockMasterData";
         public const string StageMasterDataKey = "StageMasterData";
         public const string BlockSpritePass = "Sprite/Blocks/";
-        public const string StageSpritePass = "Sprite/Stage/";
-        public const string BlockPrefabPass = "Prefab/JapaneseCharacter/";
+        public const string BlockPrefabPass = "Prefab/Block/";
+        public const string StagePrefabPass = "Prefab/Stage/";
         public const string IsMyTurnKey = "Turn";
         public const string BlockIndexKey = "Index";
         public const string GenerateBlockKey = "Gen";

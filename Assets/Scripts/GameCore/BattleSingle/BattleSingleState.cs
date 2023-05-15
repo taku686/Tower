@@ -24,7 +24,6 @@ public partial class GameCore
         private float _time;
         private bool _push;
         private readonly Subject<int> _nextBlock = new();
-        private bool _isAllBlockStop;
         private int _blockCount;
 
         protected override void OnEnter(State prevState)
@@ -84,7 +83,6 @@ public partial class GameCore
             _blockFactory = Owner.blockFactory;
             _gameOverLine = Owner.gameOverLine;
             _stateMachine = Owner._stateMachine;
-            _isAllBlockStop = false;
             _blockCount = 0;
             InitializeButton();
             InitializeSubscribe();
@@ -117,7 +115,7 @@ public partial class GameCore
             _nextBlock.Subscribe(index => UniTask.Void(async () =>
             {
                 _blockCount = 0;
-                var blockData = _blockDataManager.GetBlockData(index);
+                var blockData = _blockDataManager.GetBlockData(index, 3);
                 var block = await _blockFactory.GenerateBlock(blockData);
                 _currentBlockObj = block.GetComponent<BlockGameObject>();
                 var blocks = GameObject.FindGameObjectsWithTag(GameCommonData.BlockTag).ToList();
@@ -132,8 +130,8 @@ public partial class GameCore
                         }
 
                         _blockCount++;
-                        Debug.Log(blockObj.name + " stop " + "_blocksCount " + _blockCount + " blockCount" +
-                                  blocks.Count);
+                        /*Debug.Log(blockObj.name + " stop " + "_blocksCount " + _blockCount + " blockCount" +
+                                  blocks.Count);*/
                         if (_blockCount == blocks.Count)
                         {
                             var blockIndex = _blockDataManager.GetRandomBlockData().Id;

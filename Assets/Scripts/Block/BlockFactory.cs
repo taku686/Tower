@@ -25,7 +25,7 @@ public class BlockFactory : MonoBehaviour
     public async UniTask<GameObject> GenerateBlock(BlockData data)
     {
         await UniTask.Delay(TimeSpan.FromSeconds(2));
-        var block = PhotonNetwork.Instantiate(GameCommonData.BlockPrefabPass + data.Name,
+        var block = PhotonNetwork.Instantiate(GameCommonData.BlockPrefabPass + data.Stage + "/" + data.Name,
             blockParent.position, blockParent.rotation);
         var blockSc = block.GetComponent<BlockGameObject>();
         _count++;
