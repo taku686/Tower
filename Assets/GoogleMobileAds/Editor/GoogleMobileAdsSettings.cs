@@ -47,9 +47,6 @@ namespace GoogleMobileAds.Editor
         [SerializeField]
         private bool optimizeAdLoading;
 
-        [SerializeField]
-        private string userTrackingUsageDescription;
-
         public string GoogleMobileAdsAndroidAppId
         {
             get { return adMobAndroidAppId; }
@@ -83,13 +80,6 @@ namespace GoogleMobileAds.Editor
             get { return optimizeAdLoading; }
 
             set { optimizeAdLoading = value; }
-        }
-
-        public string UserTrackingUsageDescription
-        {
-            get { return userTrackingUsageDescription; }
-
-            set { userTrackingUsageDescription = value; }
         }
     }
 }

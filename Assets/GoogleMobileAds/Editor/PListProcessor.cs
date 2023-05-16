@@ -52,12 +52,6 @@ public static class PListProcessor
             plist.root.SetString("GADApplicationIdentifier", appId);
         }
 
-        string userTrackingDescription = instance.UserTrackingUsageDescription;
-        if (!string.IsNullOrEmpty(userTrackingDescription))
-        {
-            plist.root.SetString("NSUserTrackingUsageDescription", userTrackingDescription);
-        }
-
         if (instance.DelayAppMeasurementInit)
         {
             plist.root.SetBoolean("GADDelayAppMeasurementInit", true);
