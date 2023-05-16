@@ -49,8 +49,10 @@ public partial class GameCore
         {
             _titleView.startButton.onClick.RemoveAllListeners();
             _titleView.nameChangeButton.onClick.RemoveAllListeners();
+            _titleView.settingButton.onClick.RemoveAllListeners();
             _titleView.startButton.onClick.AddListener(OnClickStart);
             _titleView.nameChangeButton.onClick.AddListener(OnClickNameChange);
+            _titleView.settingButton.onClick.AddListener(OnClickSetting);
         }
 
         private void SetUpUiContents()
@@ -74,6 +76,12 @@ public partial class GameCore
         {
             SoundManager.Instance.DecideSe();
             _stateMachine.Dispatch((int)Event.NameChange);
+        }
+        
+        private void OnClickSetting()
+        {
+            SoundManager.Instance.DecideSe();
+            _stateMachine.Dispatch((int)Event.Setting);
         }
 
         private async UniTask<bool> Login()

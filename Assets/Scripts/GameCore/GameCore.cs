@@ -21,6 +21,7 @@ public partial class GameCore : MonoBehaviour
     [SerializeField] private BattleView battleView;
     [SerializeField] private BattleResultView battleResultView;
     [SerializeField] private NameChangeView nameChangeView;
+    [SerializeField] private SettingView settingView;
     [SerializeField] private SingleBattleResultView singleBattleResultView;
     [SerializeField] private BlockFactory blockFactory;
     [SerializeField] private GameOverLine gameOverLine;
@@ -31,7 +32,7 @@ public partial class GameCore : MonoBehaviour
     private int _overlapBlockCount;
     private GameObject _stageObj;
 
-
+//BattleSingleを一番最後に設定する
     private enum Event
     {
         Title,
@@ -41,6 +42,7 @@ public partial class GameCore : MonoBehaviour
         BattleResult,
         NameChange,
         SingleBattleResult,
+        Setting,
         BattleSingle,
     }
 
@@ -78,6 +80,7 @@ public partial class GameCore : MonoBehaviour
         _stateMachine.AddTransition<BattleState, BattleResultState>((int)Event.BattleResult);
         _stateMachine.AddTransition<BattleSingleState, SingleBattleResultState>((int)Event.SingleBattleResult);
         _stateMachine.AddTransition<TitleState, NameChangeState>((int)Event.NameChange);
+        _stateMachine.AddTransition<TitleState, SettingState>((int)Event.Setting);
     }
 
     private void SwitchUiView(int index)
