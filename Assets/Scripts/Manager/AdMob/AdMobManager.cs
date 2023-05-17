@@ -9,6 +9,11 @@ public class AdMobManager : MonoBehaviour
     private GameObject icon;
     private bool nativeAdLoaded;
     private NativeAd nativeAd;
+    private readonly Vector3 _adPos1 = new(0, 3.11f, 0);
+    private readonly Vector3 _adPos2 = new(0, -4.36f, 0);
+    private readonly Vector3 _adScale1 = new(4.59f, 3.36f, 1);
+    private readonly Vector3 _adScale2 = new(4.68f, 1, 1);
+
 
     void Start()
     {
@@ -26,8 +31,8 @@ public class AdMobManager : MonoBehaviour
             Texture2D iconTexture = this.nativeAd.GetIconTexture();
 
             icon = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            icon.transform.position = new Vector3(1, 1, 1);
-            icon.transform.localScale = new Vector3(1, 1, 1);
+            icon.transform.position = _adPos1;
+            icon.transform.localScale = _adScale1;
             icon.GetComponent<Renderer>().material.mainTexture = iconTexture;
 
             // Register GameObject that will display icon asset of native ad.
