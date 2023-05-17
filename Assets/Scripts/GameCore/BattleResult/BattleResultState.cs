@@ -12,6 +12,7 @@ public partial class GameCore
         private BattleResultView _battleResultView;
         private StateMachine<GameCore> _stateMachine;
         private UserDataManager _userDataManager;
+        private AdMobManager _adMobManager;
         private static readonly Color WinColor = Color.red;
         private static readonly Color LoseColor = Color.blue;
         private const string WinText = "Win";
@@ -24,6 +25,8 @@ public partial class GameCore
 
         protected override void OnExit(State nextState)
         {
+            Owner.advertisementObj.SetActive(false);
+            _adMobManager.HideBanner();
             Owner._overlapBlockCount = 0;
             Owner._isMyTurn = false;
         }
@@ -35,11 +38,14 @@ public partial class GameCore
             _battleResultView = Owner.battleResultView;
             _stateMachine = Owner._stateMachine;
             _userDataManager = Owner.userDataManager;
+            _adMobManager = Owner.adMobManager;
             Destroy(Owner._stageObj);
             InitializeButton();
             await SetResultData();
             SetUpUiContent();
             Owner.SwitchUiView((int)Event.BattleResult);
+            Owner.advertisementObj.SetActive(true);
+            _adMobManager.ShowBanner();
         }
 
         private void InitializeButton()

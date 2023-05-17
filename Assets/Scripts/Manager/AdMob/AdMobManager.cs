@@ -1,7 +1,8 @@
-using System;
 using Data;
 using GoogleMobileAds.Api;
+using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class AdMobManager : MonoBehaviour
 {
@@ -9,38 +10,32 @@ public class AdMobManager : MonoBehaviour
     private GameObject icon;
     private bool nativeAdLoaded;
     private NativeAd nativeAd;
-    private readonly Vector3 _adPos1 = new(0, 3.11f, 0);
-    private readonly Vector3 _adPos2 = new(0, -4.36f, 0);
-    private readonly Vector3 _adScale1 = new(4.59f, 3.36f, 1);
-    private readonly Vector3 _adScale2 = new(4.68f, 1, 1);
 
+    public RawImage AdIconTexture;
+    public TextMeshProUGUI AdHeadline;
+    public TextMeshProUGUI AdDescription;
+    public TextMeshProUGUI adCallToAction;
+    public GameObject AdLoaded;
+    public GameObject AdLoading;
+    private const string AssetName = "Ad1";
 
     void Start()
     {
-        MobileAds.Initialize(initStatus => { });
-        RequestNative();
-        //RequestBanner();
+        MobileAds.Initialize(initStatus =>
+        {
+            RequestNativeAd();
+            RequestBanner();
+        });
     }
 
-    private void Update()
+    private void RequestNativeAd()
     {
-        if (this.nativeAdLoaded)
-        {
-            this.nativeAdLoaded = false;
-            // Get Texture2D for icon asset of native ad.
-            Texture2D iconTexture = this.nativeAd.GetIconTexture();
-
-            icon = GameObject.CreatePrimitive(PrimitiveType.Quad);
-            icon.transform.position = _adPos1;
-            icon.transform.localScale = _adScale1;
-            icon.GetComponent<Renderer>().material.mainTexture = iconTexture;
-
-            // Register GameObject that will display icon asset of native ad.
-            if (!this.nativeAd.RegisterIconImageGameObject(icon))
-            {
-                // Handle failure to register ad asset.
-            }
-        }
+        AdLoader adLoader = new AdLoader.Builder(GameCommonData.NativeAdUnitId)
+            .ForNativeAd()
+            .Build();
+        adLoader.OnNativeAdLoaded += this.HandleNativeAdLoaded;
+        adLoader.OnAdFailedToLoad += this.HandleAdFailedToLoad;
+        adLoader.LoadAd(new AdRequest.Builder().Build());
     }
 
     private void RequestBanner()
@@ -51,32 +46,64 @@ public class AdMobManager : MonoBehaviour
             _bannerViewTop = null;
         }
 
-        var bannerHeight = 400 * Screen.dpi / 160.0f;
-        AdSize adSize = new AdSize(360, (int)bannerHeight);
-        _bannerViewTop = new BannerView(GameCommonData.BannerAdUnitId, AdSize.SmartBanner, AdPosition.Center);
+        _bannerViewTop = new BannerView(GameCommonData.BannerAdUnitId, AdSize.SmartBanner, AdPosition.Bottom);
         AdRequest request = new AdRequest.Builder().Build();
         _bannerViewTop.LoadAd(request);
+        HideBanner();
     }
 
-    private void RequestNative()
+    public void ShowBanner()
     {
-        AdLoader adLoader = new AdLoader.Builder(GameCommonData.NativeAdUnitId)
-            .ForNativeAd()
-            .Build();
-        adLoader.OnNativeAdLoaded += this.HandleNativeAdLoaded;
-        adLoader.OnAdFailedToLoad += this.HandleNativeAdFailedToLoad;
-        adLoader.LoadAd(new AdRequest.Builder().Build());
+        _bannerViewTop.Show();
     }
 
-    private void HandleNativeAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
+    public void HideBanner()
     {
-        Debug.Log("Native ad failed to load: " + args.LoadAdError.GetMessage());
+        _bannerViewTop.Hide();
     }
+
+
+    private void HandleAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
+    {
+        Debug.LogError("Native ad failed to load: " + args.LoadAdError.GetMessage());
+    }
+
 
     private void HandleNativeAdLoaded(object sender, NativeAdEventArgs args)
     {
         Debug.Log("Native ad loaded.");
         this.nativeAd = args.nativeAd;
-        this.nativeAdLoaded = true;
+        AdIconTexture.texture = nativeAd.GetIconTexture();
+        AdHeadline.text = nativeAd.GetHeadlineText();
+        AdDescription.text = nativeAd.GetBodyText();
+        adCallToAction.text = nativeAd.GetCallToActionText();
+        if (!nativeAd.RegisterIconImageGameObject(AdIconTexture.gameObject))
+        {
+            Debug.Log("error registering icon");
+        }
+
+        if (!nativeAd.RegisterHeadlineTextGameObject(AdHeadline.gameObject))
+        {
+            Debug.Log("error registering headline");
+        }
+
+        if (!nativeAd.RegisterBodyTextGameObject(AdDescription.gameObject))
+        {
+            Debug.Log("error registering description");
+        }
+
+        nativeAd.RegisterIconImageGameObject(AdIconTexture.gameObject);
+        nativeAd.RegisterHeadlineTextGameObject(AdHeadline.gameObject);
+        nativeAd.RegisterCallToActionGameObject(adCallToAction.gameObject);
+        nativeAd.RegisterAdvertiserTextGameObject(AdDescription.gameObject);
+        //disable loading and enable ad object
+        AdLoaded.gameObject.SetActive(true);
+        AdLoading.gameObject.SetActive(false);
+    }
+
+    private void HandleCustomNativeAdClicked(CustomNativeAd customNativeAd, string assetName)
+    {
+        Debug.Log("Custom Native ad asset with name " + assetName + " was clicked.");
+        customNativeAd.PerformClick(AssetName);
     }
 }

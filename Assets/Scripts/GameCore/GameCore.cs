@@ -3,6 +3,7 @@ using DefaultNamespace;
 using Manager.DataManager;
 using Photon;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public partial class GameCore : MonoBehaviour
 {
@@ -15,6 +16,7 @@ public partial class GameCore : MonoBehaviour
     [SerializeField] private StageDataManager stageDataManager;
     [SerializeField] private PhotonManager photonManager;
     [SerializeField] private UserDataManager userDataManager;
+    [SerializeField] private AdMobManager adMobManager;
     [SerializeField] private TitleView titleView;
     [SerializeField] private BattleModeSelectView battleModeSelectView;
     [SerializeField] private BattleReadyView battleReadyView;
@@ -26,6 +28,7 @@ public partial class GameCore : MonoBehaviour
     [SerializeField] private BlockFactory blockFactory;
     [SerializeField] private GameOverLine gameOverLine;
     [SerializeField] private List<GameObject> uiObjects = new();
+    [SerializeField] private GameObject advertisementObj;
     [SerializeField] private Transform stageParent;
     private bool _isOnLine;
     private bool _isMyTurn;
@@ -60,6 +63,7 @@ public partial class GameCore : MonoBehaviour
 
     private void Initialize()
     {
+        advertisementObj.SetActive(false);
         photonManager.Initialize(userDataManager);
         userDataManager.Initialize(playFabUserDataManager);
         playFabTitleDataManager.Initialize(blockDataManager, stageDataManager);
