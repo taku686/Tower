@@ -17,6 +17,7 @@ public partial class GameCore : MonoBehaviour
     [SerializeField] private PhotonManager photonManager;
     [SerializeField] private UserDataManager userDataManager;
     [SerializeField] private AdMobManager adMobManager;
+    [SerializeField] private IconDataManager iconDataManager;
     [SerializeField] private TitleView titleView;
     [SerializeField] private BattleModeSelectView battleModeSelectView;
     [SerializeField] private BattleReadyView battleReadyView;
@@ -66,7 +67,7 @@ public partial class GameCore : MonoBehaviour
         advertisementObj.SetActive(false);
         photonManager.Initialize(userDataManager);
         userDataManager.Initialize(playFabUserDataManager);
-        playFabTitleDataManager.Initialize(blockDataManager, stageDataManager);
+        playFabTitleDataManager.Initialize(blockDataManager, stageDataManager, iconDataManager);
         playFabLoginManager.Initialize(playFabTitleDataManager, userDataManager);
         titleView.Initialize();
     }
@@ -79,6 +80,8 @@ public partial class GameCore : MonoBehaviour
         _stateMachine.AddTransition<TitleState, BattleModeSelectState>((int)Event.BattleModeSelect);
         _stateMachine.AddTransition<BattleReadyState, BattleModeSelectState>((int)Event.BattleModeSelect);
         _stateMachine.AddTransition<BattleModeSelectState, BattleReadyState>((int)Event.BattleReady);
+        _stateMachine.AddTransition<SingleBattleResultState, BattleReadyState>((int)Event.BattleReady);
+        _stateMachine.AddTransition<BattleResultState, BattleReadyState>((int)Event.BattleReady);
         _stateMachine.AddTransition<BattleReadyState, BattleState>((int)Event.Battle);
         _stateMachine.AddTransition<BattleReadyState, BattleSingleState>((int)Event.BattleSingle);
         _stateMachine.AddTransition<BattleState, BattleResultState>((int)Event.BattleResult);

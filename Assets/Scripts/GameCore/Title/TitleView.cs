@@ -9,6 +9,7 @@ public class TitleView : MonoBehaviour
     public Button settingButton;
     public Button nameChangeButton;
     public TextMeshProUGUI nameText;
+    public Image iconImage;
 
     public void Initialize()
     {
