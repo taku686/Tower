@@ -8,4 +8,6 @@ public class NameChangeView : MonoBehaviour
     public Button closeButton;
     public Button leftButton;
     public Button rightButton;
+    public Transform iconParent;
+    public IconGrid iconGrid;
 }

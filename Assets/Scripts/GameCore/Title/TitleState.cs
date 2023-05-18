@@ -104,14 +104,14 @@ public partial class GameCore
                 return false;
             }
 
-            var userName = await _userDataManager.GetUserName();
-            Debug.Log(userName);
+            var userName = await _userDataManager.GetUserNameAsync();
             if (string.IsNullOrEmpty(userName))
             {
                 _isNameNullOrEmpty = true;
                 return false;
             }
 
+            _userDataManager.SetUserName(userName);
             Debug.Log("ログイン成功");
             return true;
         }

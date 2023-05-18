@@ -23,13 +23,18 @@ public class UserDataManager : MonoBehaviour
         return _userData;
     }
 
-    public async UniTask<string> GetUserName()
+    public async UniTask<string> GetUserNameAsync()
     {
         var userName = await _playFabUserDataManager.GetUserDisplayName();
         return userName;
     }
 
-    public async UniTask<bool> SetUserName(string userName)
+    public string GetUserName()
+    {
+        return _userData.Name;
+    }
+
+    public async UniTask<bool> SetUserNameAsync(string userName)
     {
         var result = await _playFabUserDataManager.UpdateUserDisplayName(userName);
         if (!result)
@@ -40,6 +45,11 @@ public class UserDataManager : MonoBehaviour
         PlayerPrefs.SetString(GameCommonData.UserKey, userName);
         _userData.Name = userName;
         return true;
+    }
+
+    public void SetUserName(string userName)
+    {
+        _userData.Name = userName;
     }
 
     public void SetWinCount()

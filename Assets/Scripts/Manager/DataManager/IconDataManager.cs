@@ -22,5 +22,10 @@ namespace Manager.DataManager
         {
             return _iconDatum.FirstOrDefault(x => x.Index == index)!.Sprite;
         }
+
+        public List<IconData> GetIconDatum()
+        {
+            return _iconDatum;
+        }
     }
 }
