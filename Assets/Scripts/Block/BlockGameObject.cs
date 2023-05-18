@@ -27,12 +27,6 @@ namespace Block
 
         private void FixedUpdate()
         {
-            /*if (BlockStateReactiveProperty.Value == BlockSate.Stop && _rigidbody2D.velocity.magnitude > StopThreshold)
-            {
-                BlockStateReactiveProperty.Value = BlockSate.ReMoVe;
-                return;
-            }*/
-
             if (BlockStateReactiveProperty.Value == BlockSate.Stop)
             {
                 return;
@@ -45,7 +39,7 @@ namespace Block
             }
 
 
-            if ((BlockStateReactiveProperty.Value == BlockSate.ReMoVe ||
+            if ((BlockStateReactiveProperty.Value == BlockSate.ReMove ||
                  BlockStateReactiveProperty.Value == BlockSate.Moving) &&
                 _rigidbody2D.velocity.magnitude <= StopThreshold)
             {
@@ -75,6 +69,6 @@ namespace Block
         Rotating,
         Moving,
         Stop,
-        ReMoVe
+        ReMove
     }
 }

@@ -12,6 +12,7 @@ public partial class GameCore
         private StateMachine<GameCore> _stateMachine;
         private UserDataManager _userDataManager;
         private IconDataManager _iconDataManager;
+        private NgWordDataManager _ngWordDataManager;
         private readonly List<IconGrid> _iconGrids = new();
 
         protected override void OnEnter(State prevState)
@@ -33,6 +34,7 @@ public partial class GameCore
             _stateMachine = Owner._stateMachine;
             _userDataManager = Owner.userDataManager;
             _iconDataManager = Owner.iconDataManager;
+            _ngWordDataManager = Owner.ngWordDataManager;
         }
 
         private void InitializeButton()
@@ -52,6 +54,12 @@ public partial class GameCore
         {
             SoundManager.Instance.DecideSe();
             var name = _nameChangeView.inputField.text;
+            if (!_ngWordDataManager.Validate(name))
+            {
+                Debug.Log("名前が適切ではありません。");
+                return;
+            }
+
             var result = await _userDataManager.SetUserNameAsync(name);
             if (!result)
             {
