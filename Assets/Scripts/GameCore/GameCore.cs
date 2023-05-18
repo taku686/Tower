@@ -17,6 +17,7 @@ public partial class GameCore : MonoBehaviour
     [SerializeField] private PhotonManager photonManager;
     [SerializeField] private UserDataManager userDataManager;
     [SerializeField] private AdMobManager adMobManager;
+    [SerializeField] private IconDataManager iconDataManager;
     [SerializeField] private TitleView titleView;
     [SerializeField] private BattleModeSelectView battleModeSelectView;
     [SerializeField] private BattleReadyView battleReadyView;
@@ -66,7 +67,7 @@ public partial class GameCore : MonoBehaviour
         advertisementObj.SetActive(false);
         photonManager.Initialize(userDataManager);
         userDataManager.Initialize(playFabUserDataManager);
-        playFabTitleDataManager.Initialize(blockDataManager, stageDataManager);
+        playFabTitleDataManager.Initialize(blockDataManager, stageDataManager, iconDataManager);
         playFabLoginManager.Initialize(playFabTitleDataManager, userDataManager);
         titleView.Initialize();
     }

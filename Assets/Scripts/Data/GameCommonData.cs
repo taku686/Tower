@@ -7,7 +7,9 @@
         public const string NativeAdUnitId = "ca-app-pub-3759795642939239/6835075237";
         public const string BlockMasterDataKey = "BlockMasterData";
         public const string StageMasterDataKey = "StageMasterData";
+        public const string IconMasterDataKey = "IconMasterData";
         public const string BlockSpritePass = "Sprite/Blocks/";
+        public const string IconSpritePass = "Sprite/Icon/";
         public const string BlockPrefabPass = "Prefab/Block/";
         public const string StagePrefabPass = "Prefab/Stage/";
         public const string IsMyTurnKey = "Turn";
