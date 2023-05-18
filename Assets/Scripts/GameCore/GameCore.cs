@@ -18,6 +18,7 @@ public partial class GameCore : MonoBehaviour
     [SerializeField] private UserDataManager userDataManager;
     [SerializeField] private AdMobManager adMobManager;
     [SerializeField] private IconDataManager iconDataManager;
+    [SerializeField] private NgWordDataManager ngWordDataManager;
     [SerializeField] private TitleView titleView;
     [SerializeField] private BattleModeSelectView battleModeSelectView;
     [SerializeField] private BattleReadyView battleReadyView;
@@ -67,7 +68,7 @@ public partial class GameCore : MonoBehaviour
         advertisementObj.SetActive(false);
         photonManager.Initialize(userDataManager);
         userDataManager.Initialize(playFabUserDataManager);
-        playFabTitleDataManager.Initialize(blockDataManager, stageDataManager, iconDataManager);
+        playFabTitleDataManager.Initialize(blockDataManager, stageDataManager, iconDataManager, ngWordDataManager);
         playFabLoginManager.Initialize(playFabTitleDataManager, userDataManager);
         titleView.Initialize();
     }

@@ -8,6 +8,7 @@
         public const string BlockMasterDataKey = "BlockMasterData";
         public const string StageMasterDataKey = "StageMasterData";
         public const string IconMasterDataKey = "IconMasterData";
+        public const string NgWordMasterDataKey = "NgWordMasterData";
         public const string BlockSpritePass = "Sprite/Blocks/";
         public const string IconSpritePass = "Sprite/Icon/";
         public const string BlockPrefabPass = "Prefab/Block/";

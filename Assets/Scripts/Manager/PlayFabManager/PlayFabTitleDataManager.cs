@@ -10,13 +10,15 @@ public class PlayFabTitleDataManager : MonoBehaviour
     private BlockDataManager _blockDataManager;
     private StageDataManager _stageDataManager;
     private IconDataManager _iconDataManager;
+    private NgWordDataManager _ngWordDataManager;
 
     public void Initialize(BlockDataManager blockDataManager, StageDataManager stageDataManager,
-        IconDataManager iconDataManager)
+        IconDataManager iconDataManager, NgWordDataManager ngWordDataManager)
     {
         _blockDataManager = blockDataManager;
         _stageDataManager = stageDataManager;
         _iconDataManager = iconDataManager;
+        _ngWordDataManager = ngWordDataManager;
     }
 
     public async UniTask SetTitleData(Dictionary<string, string> titleDatum)
@@ -27,6 +29,8 @@ public class PlayFabTitleDataManager : MonoBehaviour
         await SetStageDataManager(stageDatum);
         var iconDatum = JsonConvert.DeserializeObject<IconData[]>(titleDatum[GameCommonData.IconMasterDataKey]);
         await SetIconDataManager(iconDatum);
+        var ngWordDatum = JsonConvert.DeserializeObject<NGWord[]>(titleDatum[GameCommonData.NgWordMasterDataKey]);
+        SetNgWordDataMaster(ngWordDatum);
     }
 
     private void SetBlockDataManager(BlockData[] blockDatum)
@@ -66,6 +70,14 @@ public class PlayFabTitleDataManager : MonoBehaviour
 
             data.Sprite = (Sprite)obj;
             _iconDataManager.AddIconData(data);
+        }
+    }
+
+    private void SetNgWordDataMaster(NGWord[] ngWords)
+    {
+        foreach (var word in ngWords)
+        {
+            _ngWordDataManager.AddWord(word);
         }
     }
 }
