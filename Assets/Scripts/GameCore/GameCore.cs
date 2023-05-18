@@ -80,6 +80,8 @@ public partial class GameCore : MonoBehaviour
         _stateMachine.AddTransition<TitleState, BattleModeSelectState>((int)Event.BattleModeSelect);
         _stateMachine.AddTransition<BattleReadyState, BattleModeSelectState>((int)Event.BattleModeSelect);
         _stateMachine.AddTransition<BattleModeSelectState, BattleReadyState>((int)Event.BattleReady);
+        _stateMachine.AddTransition<SingleBattleResultState, BattleReadyState>((int)Event.BattleReady);
+        _stateMachine.AddTransition<BattleResultState, BattleReadyState>((int)Event.BattleReady);
         _stateMachine.AddTransition<BattleReadyState, BattleState>((int)Event.Battle);
         _stateMachine.AddTransition<BattleReadyState, BattleSingleState>((int)Event.BattleSingle);
         _stateMachine.AddTransition<BattleState, BattleResultState>((int)Event.BattleResult);

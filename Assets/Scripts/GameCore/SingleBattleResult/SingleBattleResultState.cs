@@ -1,6 +1,5 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 using State = StateMachine<GameCore>.State;
 
 public partial class GameCore
@@ -47,7 +46,9 @@ public partial class GameCore
         private void InitializeButton()
         {
             _singleBattleResultView.backButton.onClick.RemoveAllListeners();
+            _singleBattleResultView.retryButton.onClick.RemoveAllListeners();
             _singleBattleResultView.backButton.onClick.AddListener(OnClickBack);
+            _singleBattleResultView.retryButton.onClick.AddListener(OnClickRetry);
         }
 
         private void SetUpUiContent()
@@ -66,6 +67,13 @@ public partial class GameCore
         {
             SoundManager.Instance.DecideSe();
             _stateMachine.Dispatch((int)Event.Title);
+        }
+
+        private void OnClickRetry()
+        {
+            SoundManager.Instance.DecideSe();
+            Owner._isOnLine = false;
+            _stateMachine.Dispatch((int)Event.BattleReady);
         }
     }
 }

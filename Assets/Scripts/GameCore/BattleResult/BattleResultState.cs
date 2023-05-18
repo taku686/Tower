@@ -51,7 +51,9 @@ public partial class GameCore
         private void InitializeButton()
         {
             _battleResultView.backButton.onClick.RemoveAllListeners();
+            _battleResultView.retryButton.onClick.RemoveAllListeners();
             _battleResultView.backButton.onClick.AddListener(OnClickBack);
+            _battleResultView.retryButton.onClick.AddListener(OnClickRetry);
         }
 
         private void SetUpUiContent()
@@ -92,6 +94,13 @@ public partial class GameCore
         {
             SoundManager.Instance.DecideSe();
             _stateMachine.Dispatch((int)Event.Title);
+        }
+
+        private void OnClickRetry()
+        {
+            SoundManager.Instance.DecideSe();
+            Owner._isOnLine = true;
+            _stateMachine.Dispatch((int)Event.BattleReady);
         }
     }
 }
