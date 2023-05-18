@@ -3,6 +3,8 @@
     public static class GameCommonData
     {
         public const string TitleId = "4C89B";
+        public const string BannerAdUnitId = "ca-app-pub-3940256099942544/6300978111";
+        public const string NativeAdUnitId = "ca-app-pub-3759795642939239/6835075237";
         public const string BlockMasterDataKey = "BlockMasterData";
         public const string StageMasterDataKey = "StageMasterData";
         public const string BlockSpritePass = "Sprite/Blocks/";

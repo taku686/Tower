@@ -5,7 +5,8 @@ public class SoundManager : MonoBehaviour
 {
     public static SoundManager Instance;
 
-    [SerializeField] private AudioSource se;
+    [SerializeField] private AudioSource seAudioSource;
+    [SerializeField] private AudioSource bgmAudioSource;
     [SerializeField] private AudioClip gameStartSe;
     [SerializeField] private AudioClip decideSe;
     [SerializeField] private AudioClip cancelSe;
@@ -41,18 +42,28 @@ public class SoundManager : MonoBehaviour
         PlaySingle(cancelSe);
     }
 
-    public void PlaySingle(AudioClip clip)
+    public void SeChangeVolume(float volume)
     {
-        se.clip = clip;
-        se.Play();
+        seAudioSource.volume = volume;
+    }
+
+    public void BgmChangeVolume(float volume)
+    {
+        bgmAudioSource.volume = volume;
+    }
+
+    private void PlaySingle(AudioClip clip)
+    {
+        seAudioSource.clip = clip;
+        seAudioSource.Play();
     }
 
     public void RandomSe(params AudioClip[] clips)
     {
         int randomIndex = Random.Range(0, clips.Length);
         float randomPitch = Random.Range(low, high);
-        se.pitch = randomPitch;
-        se.clip = clips[randomIndex];
-        se.Play();
+        seAudioSource.pitch = randomPitch;
+        seAudioSource.clip = clips[randomIndex];
+        seAudioSource.Play();
     }
 }

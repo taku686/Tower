@@ -12,6 +12,7 @@ public partial class GameCore
         private SingleBattleResultView _singleBattleResultView;
         private StateMachine<GameCore> _stateMachine;
         private UserDataManager _userDataManager;
+        private AdMobManager _adMobManager;
 
         protected override void OnEnter(State prevState)
         {
@@ -20,6 +21,8 @@ public partial class GameCore
 
         protected override void OnExit(State nextState)
         {
+            Owner.advertisementObj.SetActive(false);
+            _adMobManager.HideBanner();
             Owner._isMyTurn = false;
             Owner._overlapBlockCount = 0;
         }
@@ -31,11 +34,14 @@ public partial class GameCore
             _singleBattleResultView = Owner.singleBattleResultView;
             _stateMachine = Owner._stateMachine;
             _userDataManager = Owner.userDataManager;
+            _adMobManager = Owner.adMobManager;
             Destroy(Owner._stageObj);
             InitializeButton();
             await SetResultData();
             SetUpUiContent();
             Owner.SwitchUiView((int)Event.SingleBattleResult);
+            Owner.advertisementObj.SetActive(true);
+            _adMobManager.ShowBanner();
         }
 
         private void InitializeButton()
