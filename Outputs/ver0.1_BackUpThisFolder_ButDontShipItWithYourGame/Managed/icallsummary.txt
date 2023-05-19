@@ -211,7 +211,9 @@ UnityEngine.AudioSource::GetPitch
 UnityEngine.AudioSource::get_volume
 UnityEngine.AudioSource::PlayHelper
 UnityEngine.AudioSource::SetPitch
+UnityEngine.AudioSource::Stop
 UnityEngine.AudioSource::set_clip
+UnityEngine.AudioSource::set_mute
 UnityEngine.AudioSource::set_volume
 UnityEngine.Behaviour::get_enabled
 UnityEngine.Behaviour::get_isActiveAndEnabled

@@ -22,12 +22,20 @@ public partial class GameCore
             Owner.SwitchUiView((int)Event.Setting);
         }
 
+        protected override void OnUpdate()
+        {
+            var seValue = _settingView.seSlider.value;
+            var bgmValue = _settingView.bgmSlider.value;
+            OnValueChangeBgmVolume(bgmValue);
+            OnValueChangeSeVolume(seValue);
+        }
+
         private void InitializeSlider()
         {
-            _settingView.bgmSlider.onValueChanged.RemoveAllListeners();
+            /*_settingView.bgmSlider.onValueChanged.RemoveAllListeners();
             _settingView.seSlider.onValueChanged.RemoveAllListeners();
             _settingView.bgmSlider.onValueChanged.AddListener(OnValueChangeBgmVolume);
-            _settingView.seSlider.onValueChanged.AddListener(OnValueChangeSeVolume);
+            _settingView.seSlider.onValueChanged.AddListener(OnValueChangeSeVolume);*/
         }
 
         private void InitializeButton()
