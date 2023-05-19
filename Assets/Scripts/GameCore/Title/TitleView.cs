@@ -6,8 +6,10 @@ using UnityEngine.UI;
 public class TitleView : MonoBehaviour
 {
     public Button startButton;
+    public Button settingButton;
     public Button nameChangeButton;
     public TextMeshProUGUI nameText;
+    public Image iconImage;
 
     public void Initialize()
     {

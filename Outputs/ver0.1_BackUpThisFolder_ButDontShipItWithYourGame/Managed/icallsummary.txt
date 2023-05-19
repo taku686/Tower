@@ -233,7 +233,9 @@ UnityEngine.Camera::ScreenToWorldPoint_Injected
 UnityEngine.Camera::WorldToScreenPoint_Injected
 UnityEngine.Camera::get_backgroundColor_Injected
 UnityEngine.Camera::get_pixelRect_Injected
+UnityEngine.Camera::get_projectionMatrix_Injected
 UnityEngine.Camera::get_rect_Injected
+UnityEngine.Camera::get_worldToCameraMatrix_Injected
 UnityEngine.Camera::set_aspect
 UnityEngine.Camera::set_backgroundColor_Injected
 UnityEngine.Camera::set_farClipPlane
@@ -309,8 +311,11 @@ UnityEngine.CapsuleCollider::get_center_Injected
 UnityEngine.CapsuleCollider::set_center_Injected
 UnityEngine.CapsuleCollider::set_height
 UnityEngine.CharacterController::get_height
+UnityEngine.Collider::Raycast_Injected
+UnityEngine.Collider::get_bounds_Injected
 UnityEngine.Collider::set_enabled
 UnityEngine.Collider::get_attachedRigidbody
+UnityEngine.Collider2D::get_bounds_Injected
 UnityEngine.Component::GetComponentFastPath
 UnityEngine.Component::GetComponentsForListInternal
 UnityEngine.Component::get_gameObject
@@ -396,6 +401,8 @@ UnityEngine.GameObject::CreatePrimitive
 UnityEngine.GameObject::Find
 UnityEngine.GameObject::FindGameObjectsWithTag
 UnityEngine.GameObject::get_transform
+UnityEngine.GeometryUtility::TestPlanesAABB_Injected
+UnityEngine.GeometryUtility::Internal_ExtractPlanes_Injected
 UnityEngine.Gizmos::DrawLine_Injected
 UnityEngine.Gizmos::DrawSphere_Injected
 UnityEngine.Gizmos::DrawWireSphere_Injected
@@ -510,6 +517,7 @@ UnityEngine.GUIUtility::set_imeCompositionMode
 UnityEngine.GUIUtility::set_mouseUsed
 UnityEngine.GUIUtility::set_systemCopyBuffer
 UnityEngine.Hash128::Hash128ToStringImpl_Injected
+UnityEngine.ImageConversion::LoadImage
 UnityEngine.Input::CheckDisabled
 UnityEngine.Input::GetButton
 UnityEngine.Input::GetButtonDown
@@ -670,6 +678,7 @@ UnityEngine.Object::set_hideFlags
 UnityEngine.Object::get_hideFlags
 UnityEngine.Object::FindObjectFromInstanceID
 UnityEngine.Object::Internal_CloneSingle
+UnityEngine.Object::Internal_CloneSingleWithParent
 UnityEngine.Object::Internal_InstantiateSingle_Injected
 UnityEngine.Object::FindObjectsOfType
 UnityEngine.ObjectGUIState::Internal_Create
@@ -692,6 +701,7 @@ UnityEngine.PhysicsScene::Internal_RaycastNonAlloc_Injected
 UnityEngine.PhysicsScene2D::GetRayIntersectionArray_Internal_Injected
 UnityEngine.PhysicsScene2D::RaycastArray_Internal_Injected
 UnityEngine.PhysicsScene2D::RaycastList_Internal_Injected
+UnityEngine.PhysicsScene2D::GetRayIntersection_Internal_Injected
 UnityEngine.PhysicsScene2D::Raycast_Internal_Injected
 UnityEngine.Playables.PlayableHandle::IsValid_Injected
 UnityEngine.Playables.PlayableHandle::GetPlayableType_Injected
@@ -707,8 +717,6 @@ UnityEngine.PlayerPrefs::HasKey
 UnityEngine.PlayerPrefs::TrySetSetString
 UnityEngine.PlayerPrefs::GetString
 UnityEngine.PlayerPrefs::DeleteKey
-UnityEngine.Profiling.Profiler::BeginSampleImpl
-UnityEngine.Profiling.Profiler::EndSample
 UnityEngine.PropertyNameUtils::PropertyNameFromString_Injected
 UnityEngine.QualitySettings::get_activeColorSpace
 UnityEngine.Quaternion::AngleAxis_Injected
@@ -816,6 +824,7 @@ UnityEngine.Rigidbody2D::MoveRotation_Angle
 UnityEngine.Rigidbody2D::get_position_Injected
 UnityEngine.Rigidbody2D::get_velocity_Injected
 UnityEngine.Rigidbody2D::set_angularVelocity
+UnityEngine.Rigidbody2D::set_constraints
 UnityEngine.Rigidbody2D::set_gravityScale
 UnityEngine.Rigidbody2D::set_position_Injected
 UnityEngine.Rigidbody2D::set_rotation

@@ -23,13 +23,18 @@ public class UserDataManager : MonoBehaviour
         return _userData;
     }
 
-    public async UniTask<string> GetUserName()
+    public async UniTask<string> GetUserNameAsync()
     {
         var userName = await _playFabUserDataManager.GetUserDisplayName();
         return userName;
     }
 
-    public async UniTask<bool> SetUserName(string userName)
+    public string GetUserName()
+    {
+        return _userData.Name;
+    }
+
+    public async UniTask<bool> SetUserNameAsync(string userName)
     {
         var result = await _playFabUserDataManager.UpdateUserDisplayName(userName);
         if (!result)
@@ -40,6 +45,11 @@ public class UserDataManager : MonoBehaviour
         PlayerPrefs.SetString(GameCommonData.UserKey, userName);
         _userData.Name = userName;
         return true;
+    }
+
+    public void SetUserName(string userName)
+    {
+        _userData.Name = userName;
     }
 
     public void SetWinCount()
@@ -186,6 +196,21 @@ public class UserDataManager : MonoBehaviour
         }
     }
 
+    public void SetBlockCount(int count)
+    {
+        if (count <= _userData.blockCount)
+        {
+            return;
+        }
+
+        _userData.blockCount = count;
+    }
+
+    public int GetBlockCount()
+    {
+        return _userData.blockCount;
+    }
+
     public int GetMaxContinuityWinCount()
     {
         return _userData.MaxContinuityWinCount;
@@ -213,7 +238,8 @@ public class UserDataManager : MonoBehaviour
             Rate = 0,
             IconIndex = 0,
             MaxContinuityWinCount = 0,
-            CurrentContinuityWinCount = 0
+            CurrentContinuityWinCount = 0,
+            blockCount = 0
         };
         PlayerPrefs.SetString(GameCommonData.UserKey, "");
         _userData = userData;

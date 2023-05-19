@@ -3,11 +3,16 @@
     public static class GameCommonData
     {
         public const string TitleId = "4C89B";
+        public const string BannerAdUnitId = "ca-app-pub-3940256099942544/6300978111";
+        public const string NativeAdUnitId = "ca-app-pub-3759795642939239/6835075237";
         public const string BlockMasterDataKey = "BlockMasterData";
         public const string StageMasterDataKey = "StageMasterData";
+        public const string IconMasterDataKey = "IconMasterData";
+        public const string NgWordMasterDataKey = "NgWordMasterData";
         public const string BlockSpritePass = "Sprite/Blocks/";
-        public const string StageSpritePass = "Sprite/Stage/";
-        public const string BlockPrefabPass = "Prefab/JapaneseCharacter/";
+        public const string IconSpritePass = "Sprite/Icon/";
+        public const string BlockPrefabPass = "Prefab/Block/";
+        public const string StagePrefabPass = "Prefab/Stage/";
         public const string IsMyTurnKey = "Turn";
         public const string BlockIndexKey = "Index";
         public const string GenerateBlockKey = "Gen";
