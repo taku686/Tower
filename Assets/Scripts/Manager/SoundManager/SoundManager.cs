@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -10,8 +11,10 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private AudioClip gameStartSe;
     [SerializeField] private AudioClip decideSe;
     [SerializeField] private AudioClip cancelSe;
+    [SerializeField] private AudioClip bgm;
     [SerializeField] private float low = 0.95f;
     [SerializeField] private float high = 1.05f;
+    private const float StopVolume = 0.1f;
 
     private void Awake()
     {
@@ -44,12 +47,35 @@ public class SoundManager : MonoBehaviour
 
     public void SeChangeVolume(float volume)
     {
-        seAudioSource.volume = volume;
+        if (volume <= StopVolume)
+        {
+            seAudioSource.volume = 0;
+            seAudioSource.Stop();
+        }
+        else
+        {
+            seAudioSource.Play();
+            seAudioSource.volume = volume;
+        }
     }
 
     public void BgmChangeVolume(float volume)
     {
-        bgmAudioSource.volume = volume;
+        if (volume <= StopVolume)
+        {
+            bgmAudioSource.mute = true;
+        }
+        else
+        {
+            bgmAudioSource.mute = false;
+            bgmAudioSource.volume = volume;
+        }
+    }
+
+    public void BgmPlay()
+    {
+        bgmAudioSource.clip = bgm;
+        bgmAudioSource.Play();
     }
 
     private void PlaySingle(AudioClip clip)

@@ -65,6 +65,7 @@ public partial class GameCore : MonoBehaviour
 
     private void Initialize()
     {
+        SoundManager.Instance.BgmPlay();
         advertisementObj.SetActive(false);
         photonManager.Initialize(userDataManager);
         userDataManager.Initialize(playFabUserDataManager);
