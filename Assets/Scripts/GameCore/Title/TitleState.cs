@@ -9,6 +9,7 @@ public partial class GameCore
     {
         private PlayFabLoginManager _playFabLoginManager;
         private TitleView _titleView;
+        private CommonView _commonView;
         private StateMachine<GameCore> _stateMachine;
 
         protected override void OnEnter(State prevState)
@@ -20,6 +21,7 @@ public partial class GameCore
         {
             _playFabLoginManager = Owner.playFabLoginManager;
             _titleView = Owner.titleView;
+            _commonView = Owner.commonView;
             _stateMachine = Owner._stateMachine;
             _playFabLoginManager.Initialize();
             InitializeButton();
@@ -34,8 +36,16 @@ public partial class GameCore
 
         private async UniTask OnClickStart()
         {
+<<<<<<< Updated upstream
             var player = PlayFabSettings.staticPlayer;
             if (player.IsClientLoggedIn())
+=======
+            _commonView.loadingObj.SetActive(false);
+            var iconIndex = _userDataManager.GetIconIndex();
+            _titleView.iconImage.sprite = _iconDataManager.GetIconSprite(iconIndex);
+
+            if (string.IsNullOrEmpty(PlayerPrefs.GetString(GameCommonData.UserKey)))
+>>>>>>> Stashed changes
             {
                 return;
             }

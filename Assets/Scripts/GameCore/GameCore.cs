@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using DefaultNamespace;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public partial class GameCore : MonoBehaviour
 {
@@ -14,6 +13,15 @@ public partial class GameCore : MonoBehaviour
     [SerializeField] private BattleReadyView battleReadyView;
     [SerializeField] private BattleView battleView;
     [SerializeField] private BattleResultView battleResultView;
+<<<<<<< Updated upstream
+=======
+    [SerializeField] private NameChangeView nameChangeView;
+    [SerializeField] private SettingView settingView;
+    [SerializeField] private SingleBattleResultView singleBattleResultView;
+    [SerializeField] private CommonView commonView;
+    [SerializeField] private BlockFactory blockFactory;
+    [SerializeField] private GameOverLine gameOverLine;
+>>>>>>> Stashed changes
     [SerializeField] private List<GameObject> uiObjects = new();
 
     private enum Event
@@ -30,6 +38,26 @@ public partial class GameCore : MonoBehaviour
         InitializeState();
     }
 
+<<<<<<< Updated upstream
+=======
+    private void Update()
+    {
+        _stateMachine.Update();
+    }
+
+    private void Initialize()
+    {
+        SoundManager.Instance.BgmPlay();
+        commonView.loadingObj.SetActive(true);
+        advertisementObj.SetActive(false);
+        photonManager.Initialize(userDataManager);
+        userDataManager.Initialize(playFabUserDataManager);
+        playFabTitleDataManager.Initialize(blockDataManager, stageDataManager, iconDataManager, ngWordDataManager);
+        playFabLoginManager.Initialize(playFabTitleDataManager, userDataManager);
+        titleView.Initialize();
+    }
+
+>>>>>>> Stashed changes
     private void InitializeState()
     {
         _stateMachine = new StateMachine<GameCore>(this);
