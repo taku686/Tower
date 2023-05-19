@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using Block;
 using Cysharp.Threading.Tasks;
@@ -10,6 +11,7 @@ using Photon;
 using Photon.Pun;
 using UniRx;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using State = StateMachine<GameCore>.State;
 
 public partial class GameCore
@@ -21,13 +23,16 @@ public partial class GameCore
         private BlockFactory _blockFactory;
         private BlockDataManager _blockDataManager;
         private CancellationTokenSource _cancellationTokenSource;
-        private bool _isMyTurn;
         private BlockGameObject _currentBlockObj;
         private GameOverLine _gameOverLine;
         private StateMachine<GameCore> _stateMachine;
+        private UserDataManager _userDataManager;
         private int _battleEndCount;
         private const string MyTurnText = "あなたの番";
         private const string EnemyTurnText = "相手の番";
+        private float _time;
+        private bool _push;
+        private int _blockCount;
 
         protected override void OnEnter(State prevState)
         {
@@ -36,7 +41,6 @@ public partial class GameCore
 
         protected override void OnExit(State nextState)
         {
-            _isMyTurn = false;
             _battleEndCount = 0;
             _currentBlockObj = null;
             Cancel();
@@ -49,8 +53,19 @@ public partial class GameCore
                 return;
             }
 
-            if (Input.GetMouseButton(0) && _isMyTurn)
+            if (_push)
             {
+                _time = Time.deltaTime;
+                SuccessiveRotate();
+            }
+
+            if (Input.GetMouseButton(0) && Owner._isMyTurn)
+            {
+                if (_push)
+                {
+                    return;
+                }
+
                 var mousePos = Input.mousePosition;
                 _currentBlockObj.BlockStateReactiveProperty.Value = BlockSate.Operating;
                 if (Camera.main != null)
@@ -63,7 +78,7 @@ public partial class GameCore
                 }
             }
 
-            if (Input.GetMouseButtonUp(0) && _isMyTurn)
+            if (Input.GetMouseButtonUp(0) && Owner._isMyTurn)
             {
                 OnPointerUp(_currentBlockObj).Forget();
             }
@@ -78,12 +93,15 @@ public partial class GameCore
             _blockFactory = Owner.blockFactory;
             _gameOverLine = Owner.gameOverLine;
             _stateMachine = Owner._stateMachine;
+            _userDataManager = Owner.userDataManager;
+            _blockCount = 0;
             InitializeButton();
             InitializeSubscribe();
+            _battleView.turnText.gameObject.SetActive(true);
             Owner.SwitchUiView((int)Event.Battle);
             if (PhotonNetwork.IsMasterClient)
             {
-                _isMyTurn = true;
+                Owner._isMyTurn = true;
                 _battleView.turnText.text = MyTurnText;
                 var index = _blockDataManager.GetRandomBlockData().Id;
                 PhotonNetwork.CurrentRoom.SetBlockIndex(index);
@@ -96,36 +114,63 @@ public partial class GameCore
 
         private void InitializeButton()
         {
-            _battleView.rotateButton.onClick.RemoveAllListeners();
-            _battleView.rotateButton.onClick.AddListener(OnClickRotate);
+            EventTrigger trigger = _battleView.rotateButton.GetComponent<EventTrigger>();
+            trigger.triggers.RemoveRange(0, trigger.triggers.Count);
+            EventTrigger.Entry entry = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerDown
+            };
+            entry.callback.AddListener((eventDate) => { OnClickPushDown(); });
+            trigger.triggers.Add(entry);
+            EventTrigger.Entry entry1 = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerUp
+            };
+            entry1.callback.AddListener((eventDate) => { OnClickPushUp(); });
+            trigger.triggers.Add(entry1);
         }
 
         private void InitializeSubscribe()
         {
+            _photonManager.EnemyRate.Subscribe(rate => { _userDataManager.SetEnemyRate(rate); })
+                .AddTo(_cancellationTokenSource.Token);
+
             _photonManager.ChangeIndex.Subscribe(index => UniTask.Void(async () =>
             {
-                if (!_isMyTurn)
+                _blockCount = 0;
+                var blocks = GameObject.FindGameObjectsWithTag(GameCommonData.BlockTag).ToList();
+                Owner._overlapBlockCount = blocks.Count;
+                if (!Owner._isMyTurn)
                 {
                     _battleView.turnText.text = EnemyTurnText;
-                    _isMyTurn = !_isMyTurn;
+                    Owner._isMyTurn = !Owner._isMyTurn;
                     return;
                 }
 
+
                 _battleView.turnText.text = MyTurnText;
-                var blockData = _blockDataManager.GetBlockData(index);
+                var blockData = _blockDataManager.GetBlockData(index, 3);
                 var block = await _blockFactory.GenerateBlock(blockData);
                 _currentBlockObj = block.GetComponent<BlockGameObject>();
-                _currentBlockObj.BlockStateReactiveProperty.Subscribe(state =>
+                blocks.Add(block);
+                foreach (var blockObj in blocks)
                 {
-                    if (state != BlockSate.Stop)
+                    var blockGameObjectSc = blockObj.GetComponent<BlockGameObject>();
+                    blockGameObjectSc.BlockStateReactiveProperty.Subscribe(state =>
                     {
-                        return;
-                    }
+                        if (state != BlockSate.Stop)
+                        {
+                            return;
+                        }
 
-                    var blockIndex = _blockDataManager.GetRandomBlockData().Id;
-                    PhotonNetwork.CurrentRoom.SetBlockIndex(blockIndex);
-                    _isMyTurn = !_isMyTurn;
-                }).AddTo(_cancellationTokenSource.Token);
+                        _blockCount++;
+                        if (_blockCount == blocks.Count)
+                        {
+                            var blockIndex = _blockDataManager.GetRandomBlockData().Id;
+                            PhotonNetwork.CurrentRoom.SetBlockIndex(blockIndex);
+                        }
+                    }).AddTo(_cancellationTokenSource.Token);
+                }
             })).AddTo(_cancellationTokenSource.Token);
 
             _gameOverLine.GameEnd.Skip(1).Subscribe(value => { PhotonNetwork.CurrentRoom.SetBattleEnd(1); })
@@ -160,19 +205,59 @@ public partial class GameCore
             var rigid = blockSc.GetComponent<Rigidbody2D>();
             rigid.gravityScale = 1;
             _currentBlockObj = null;
+            Owner._isMyTurn = !Owner._isMyTurn;
             await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
             blockSc.BlockStateReactiveProperty.Value = BlockSate.Moving;
         }
 
         private void OnClickRotate()
         {
-            if (!_isMyTurn || _currentBlockObj == null)
+            if (!Owner._isMyTurn || _currentBlockObj == null)
             {
                 return;
             }
 
+            SoundManager.Instance.DecideSe();
             _currentBlockObj.BlockStateReactiveProperty.Value = BlockSate.Rotating;
-            _currentBlockObj.transform.localEulerAngles += new Vector3(0, 0, 45);
+            var transform1 = _currentBlockObj.transform;
+            transform1.localPosition = new Vector3(0, transform1.localPosition.y, 0);
+            transform1.Rotate(Vector3.forward, 45);
+        }
+
+        private void OnClickPushDown()
+        {
+            if (!Owner._isMyTurn || _currentBlockObj == null)
+            {
+                return;
+            }
+
+            _push = true;
+            SoundManager.Instance.DecideSe();
+            _currentBlockObj.BlockStateReactiveProperty.Value = BlockSate.Rotating;
+            var transform1 = _currentBlockObj.transform;
+            transform1.localPosition = new Vector3(0, transform1.localPosition.y, 0);
+        }
+
+        private void OnClickPushUp()
+        {
+            if (!Owner._isMyTurn || _currentBlockObj == null)
+            {
+                return;
+            }
+
+            _push = false;
+            var transform1 = _currentBlockObj.transform;
+            transform1.localPosition = new Vector3(0, transform1.localPosition.y, 0);
+        }
+
+        private void SuccessiveRotate()
+        {
+            if (!Owner._isMyTurn || _currentBlockObj == null)
+            {
+                return;
+            }
+
+            _currentBlockObj.transform.localEulerAngles += new Vector3(0f, 0f, _time * 50);
         }
 
         private void DestroyAllBlock()

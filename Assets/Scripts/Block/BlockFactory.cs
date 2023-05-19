@@ -10,11 +10,22 @@ public class BlockFactory : MonoBehaviour
     [SerializeField] private Transform blockParent;
     [SerializeField] private PhysicsMaterial2D material;
     private int _count;
+    private Vector3 _initPos;
+
+    public void ResetBlockParent()
+    {
+        if (_initPos == Vector3.zero)
+        {
+            _initPos = blockParent.localPosition;
+        }
+
+        blockParent.localPosition = _initPos;
+    }
 
     public async UniTask<GameObject> GenerateBlock(BlockData data)
     {
         await UniTask.Delay(TimeSpan.FromSeconds(2));
-        var block = PhotonNetwork.Instantiate(GameCommonData.BlockPrefabPass + data.Name,
+        var block = PhotonNetwork.Instantiate(GameCommonData.BlockPrefabPass + data.Stage + "/" + data.Name,
             blockParent.position, blockParent.rotation);
         var blockSc = block.GetComponent<BlockGameObject>();
         _count++;

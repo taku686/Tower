@@ -52,5 +52,7 @@ public static class RoomPropertiesExtensions
         PropsToSet[GameCommonData.BattleEndKey] = index;
         room.SetCustomProperties(PropsToSet);
         PropsToSet.Clear();
-    }
+    } 
+    
+  
 }

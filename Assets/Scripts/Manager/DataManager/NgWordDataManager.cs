@@ -33,6 +33,7 @@ namespace Manager.DataManager
             }
 
             userName = userName.Trim();
+
             userName = userName.Replace(" ", "").Replace("　", "");
             Debug.Log(userName);
             foreach (var word in _words)

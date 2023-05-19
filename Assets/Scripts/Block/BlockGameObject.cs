@@ -11,6 +11,7 @@ namespace Block
         private Rigidbody2D _rigidbody2D;
         public int index;
         public bool isOwn;
+        private const float StopThreshold = 0.01f;
 
         private void OnEnable()
         {
@@ -37,9 +38,12 @@ namespace Block
                 return;
             }
 
-            if (BlockStateReactiveProperty.Value == BlockSate.Moving &&
-                _rigidbody2D.velocity.magnitude <= 0.01f)
+
+            if ((BlockStateReactiveProperty.Value == BlockSate.ReMove ||
+                 BlockStateReactiveProperty.Value == BlockSate.Moving) &&
+                _rigidbody2D.velocity.magnitude <= StopThreshold)
             {
+                _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
                 BlockStateReactiveProperty.Value = BlockSate.Stop;
             }
         }
@@ -48,7 +52,6 @@ namespace Block
         {
             if (col.collider.CompareTag(GameCommonData.GroundTag) || col.collider.CompareTag(GameCommonData.BlockTag))
             {
-                Debug.Log("接触");
                 _rigidbody2D.gravityScale = 1;
             }
         }
@@ -65,6 +68,7 @@ namespace Block
         Operating,
         Rotating,
         Moving,
-        Stop
+        Stop,
+        ReMove
     }
 }

@@ -5,28 +5,16 @@ public class BlockData : IDisposable
 {
     public readonly string Name;
     public readonly int Id;
-    public readonly int Category;
-    public Sprite BlockSprite;
+    public readonly int Stage;
 
-    public BlockData(string name, int id, int category)
+    public BlockData(string name, int id, int stage)
     {
         Name = name;
         Id = id;
-        Category = category;
+        Stage = stage;
     }
 
     public void Dispose()
     {
     }
-}
-
-public enum Category
-{
-    Tohoku,
-    Kanto,
-    Chubu,
-    Kinki,
-    Chugoku,
-    Shikoku,
-    Kyushu,
 }

@@ -1,4 +1,5 @@
-﻿using Data;
+﻿using System;
+using Data;
 using ExitGames.Client.Photon;
 using Photon.Pun;
 using Photon.Realtime;
@@ -9,16 +10,29 @@ namespace Photon
 {
     public class PhotonManager : MonoBehaviourPunCallbacks
     {
+        private UserDataManager _userDataManager;
+        private Action _stageGenerateCallBack;
         private readonly Subject<Unit> _changeTurn = new();
         private readonly Subject<int> _changeIndex = new();
         private readonly Subject<int> _generateBlock = new();
         private readonly Subject<int> _battleEnd = new();
-        public Subject<int> GenerateBlock => _generateBlock;
+        private readonly Subject<int> _enemyRate = new();
 
+        public Subject<int> EnemyRate => _enemyRate;
+        public Subject<int> GenerateBlock => _generateBlock;
         public Subject<int> ChangeIndex => _changeIndex;
         public Subject<int> BattleEnd => _battleEnd;
-
         public Subject<Unit> ChangeTurn => _changeTurn;
+
+        public void Initialize(UserDataManager userDataManager)
+        {
+            _userDataManager = userDataManager;
+        }
+
+        public void SetStageGenerateCallBack(Action callBack)
+        {
+            _stageGenerateCallBack = callBack;
+        }
 
 
         public void OnStartConnectNetwork()
@@ -47,6 +61,9 @@ namespace Photon
 
         public override void OnJoinedRoom()
         {
+            var rate = _userDataManager.GetRate();
+            _stageGenerateCallBack?.Invoke();
+            PhotonNetwork.LocalPlayer.SetEnemyRate(rate);
         }
 
         public override void OnLeftRoom()
@@ -62,6 +79,16 @@ namespace Photon
         {
             foreach (var prop in changedProps)
             {
+                if ((string)prop.Key == GameCommonData.EnemyRateKey)
+                {
+                    if (targetPlayer.IsLocal)
+                    {
+                        return;
+                    }
+
+                    var enemyRate = (int)prop.Value;
+                    _enemyRate.OnNext(enemyRate);
+                }
             }
         }
 
@@ -84,6 +111,7 @@ namespace Photon
 
                 if ((string)property.Key == GameCommonData.BlockIndexKey)
                 {
+                    Debug.Log("ブロック生成");
                     var index = (int)property.Value;
                     if (index == GameCommonData.ErrorCode)
                     {
@@ -119,6 +147,7 @@ namespace Photon
             }
         }
 
+//todo あとで消す
         private void OnGUI()
         {
             GUILayout.Label(PhotonNetwork.NetworkClientState.ToString());

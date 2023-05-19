@@ -18,20 +18,17 @@ namespace Manager.DataManager
             _blockDatum.Add(data);
         }
 
-        public BlockData GetBlockData(int index)
+        public BlockData GetBlockData(int index, int stageIndex)
         {
-            if (!_blockDatum.Select(x => x.Id).Contains(index))
-            {
-                return null;
-            }
-
-            return _blockDatum[index];
+            return _blockDatum.FirstOrDefault(x => x.Id == index && x.Stage == stageIndex);
         }
 
         public BlockData GetRandomBlockData()
         {
-            var index = Random.Range(0, _blockDatum.Count);
-            return _blockDatum[index];
+            var stageIndex = 3;
+            var blockDatum = _blockDatum.Where(x => x.Stage == stageIndex).ToList();
+            var index = Random.Range(0, blockDatum.Count);
+            return blockDatum[index];
         }
     }
 }
