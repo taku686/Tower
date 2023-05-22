@@ -27,6 +27,8 @@ public partial class GameCore
         private GameOverLine _gameOverLine;
         private StateMachine<GameCore> _stateMachine;
         private UserDataManager _userDataManager;
+        private StageDataManager _stageDataManager;
+        private Transform _stageParent;
         private int _battleEndCount;
         private const string MyTurnText = "あなたの番";
         private const string EnemyTurnText = "相手の番";
@@ -94,6 +96,8 @@ public partial class GameCore
             _gameOverLine = Owner.gameOverLine;
             _stateMachine = Owner._stateMachine;
             _userDataManager = Owner.userDataManager;
+            _stageDataManager = Owner.stageDataManager;
+            _stageParent = Owner.stageParent;
             _blockCount = 0;
             InitializeButton();
             InitializeSubscribe();
@@ -101,6 +105,7 @@ public partial class GameCore
             Owner.SwitchUiView((int)Event.Battle);
             if (PhotonNetwork.IsMasterClient)
             {
+                GenerateStage();
                 Owner._isMyTurn = true;
                 _battleView.turnText.text = MyTurnText;
                 var index = _blockDataManager.GetRandomBlockData().Id;
@@ -188,6 +193,14 @@ public partial class GameCore
                 PhotonNetwork.LeaveRoom();
                 _stateMachine.Dispatch((int)Event.BattleResult);
             }).AddTo(_cancellationTokenSource.Token);
+        }
+
+        private void GenerateStage()
+        {
+            var stageData = _stageDataManager.GetRandomStageData();
+            PhotonNetwork.InstantiateRoomObject(
+                GameCommonData.StagePrefabPass + stageData.Stage + "/" + stageData.Name, _stageParent.position,
+                _stageParent.rotation);
         }
 
         private async UniTaskVoid OnPointerUp(BlockGameObject blockSc)

@@ -1,5 +1,4 @@
-﻿using Data;
-using Manager.DataManager;
+﻿using Manager.DataManager;
 using Photon;
 using Photon.Pun;
 using UnityEngine;
@@ -83,14 +82,6 @@ public partial class GameCore
                 var stageObj = _stageDataManager.GetRandomStageData().StageObj;
                 Owner._stageObj = Instantiate(stageObj, _stageParent);
                 Owner._stageObj.transform.localPosition = Vector3.zero;
-            }
-
-            if (Owner._isOnLine && PhotonNetwork.IsMasterClient)
-            {
-                var stageData = _stageDataManager.GetRandomStageData();
-                PhotonNetwork.InstantiateRoomObject(
-                    GameCommonData.StagePrefabPass + stageData.Stage + "/" + stageData.Name, _stageParent.position,
-                    _stageParent.rotation);
             }
         }
 
