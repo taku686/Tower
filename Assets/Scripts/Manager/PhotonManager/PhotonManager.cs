@@ -147,11 +147,10 @@ namespace Photon
             }
         }
 
-//todo あとで消す
-        private void OnGUI()
+        /*private void OnGUI()
         {
             GUILayout.Label(PhotonNetwork.NetworkClientState.ToString());
-        }
+        }*/
 
         private void OnDestroy()
         {
