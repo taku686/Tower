@@ -1,4 +1,5 @@
-﻿using Data;
+﻿using System;
+using Data;
 using UniRx;
 using UnityEngine;
 
@@ -54,6 +55,16 @@ namespace Block
             {
                 _rigidbody2D.gravityScale = 1;
             }
+        }
+
+        private void OnBecameInvisible()
+        {
+            if (BlockStateReactiveProperty.Value != BlockSate.Stop)
+            {
+                return;
+            }
+
+            _rigidbody2D.Sleep();
         }
 
         private void OnDestroy()
