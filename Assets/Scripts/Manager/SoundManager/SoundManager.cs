@@ -1,6 +1,8 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class SoundManager : MonoBehaviour
 {
@@ -47,20 +49,29 @@ public class SoundManager : MonoBehaviour
 
     public void SeChangeVolume(float volume)
     {
+        if (Mathf.Abs(seAudioSource.volume - volume) < float.Epsilon)
+        {
+            return;
+        }
+
         if (volume <= StopVolume)
         {
-            seAudioSource.volume = 0;
-            seAudioSource.Stop();
+            bgmAudioSource.mute = true;
         }
         else
         {
-            seAudioSource.Play();
+            bgmAudioSource.mute = false;
             seAudioSource.volume = volume;
         }
     }
 
     public void BgmChangeVolume(float volume)
     {
+        if (Mathf.Abs(bgmAudioSource.volume - volume) < float.Epsilon)
+        {
+            return;
+        }
+
         if (volume <= StopVolume)
         {
             bgmAudioSource.mute = true;
