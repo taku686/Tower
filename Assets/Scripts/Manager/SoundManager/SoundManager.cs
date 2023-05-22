@@ -56,11 +56,11 @@ public class SoundManager : MonoBehaviour
 
         if (volume <= StopVolume)
         {
-            bgmAudioSource.mute = true;
+            seAudioSource.mute = true;
         }
         else
         {
-            bgmAudioSource.mute = false;
+            seAudioSource.mute = false;
             seAudioSource.volume = volume;
         }
     }

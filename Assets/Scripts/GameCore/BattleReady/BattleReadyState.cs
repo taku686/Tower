@@ -1,4 +1,5 @@
-﻿using Manager.DataManager;
+﻿using Data;
+using Manager.DataManager;
 using Photon;
 using Photon.Pun;
 using UnityEngine;
@@ -12,8 +13,10 @@ public partial class GameCore
         private PhotonManager _photonManager;
         private StateMachine<GameCore> _stateMachine;
         private StageDataManager _stageDataManager;
+        private BlockParent _blockParent;
         private Transform _stageParent;
         private bool _isProcessing;
+        private readonly Vector3 _initPos = new Vector3(0, 0.82f, 0);
 
         protected override void OnEnter(State prevState)
         {
@@ -51,6 +54,9 @@ public partial class GameCore
             _photonManager = Owner.photonManager;
             _stageDataManager = Owner.stageDataManager;
             _stageParent = Owner.stageParent;
+            _blockParent = Owner.blockParent;
+            if (Camera.main != null) Camera.main.transform.localPosition = new Vector3(0, 0, -10);
+            _blockParent.transform.position = _initPos;
             InitializeButton();
             Owner.SwitchUiView((int)Event.BattleReady);
         }

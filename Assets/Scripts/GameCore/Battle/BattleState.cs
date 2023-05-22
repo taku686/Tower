@@ -24,10 +24,11 @@ public partial class GameCore
         private BlockDataManager _blockDataManager;
         private CancellationTokenSource _cancellationTokenSource;
         private BlockGameObject _currentBlockObj;
-        private GameOverLine _gameOverLine;
+        private GameOverLine[] _gameOverLines;
         private StateMachine<GameCore> _stateMachine;
         private UserDataManager _userDataManager;
         private StageDataManager _stageDataManager;
+        private StageColliderManager _stageColliderManager;
         private Transform _stageParent;
         private int _battleEndCount;
         private const string MyTurnText = "あなたの番";
@@ -93,12 +94,14 @@ public partial class GameCore
             _photonManager = Owner.photonManager;
             _blockDataManager = Owner.blockDataManager;
             _blockFactory = Owner.blockFactory;
-            _gameOverLine = Owner.gameOverLine;
+            _gameOverLines = Owner.gameOverLines;
             _stateMachine = Owner._stateMachine;
             _userDataManager = Owner.userDataManager;
             _stageDataManager = Owner.stageDataManager;
             _stageParent = Owner.stageParent;
+            _stageColliderManager = Owner.stageColliderManager;
             _blockCount = 0;
+            _stageColliderManager.Initialize();
             InitializeButton();
             InitializeSubscribe();
             _battleView.turnText.gameObject.SetActive(true);
@@ -178,8 +181,11 @@ public partial class GameCore
                 }
             })).AddTo(_cancellationTokenSource.Token);
 
-            _gameOverLine.GameEnd.Skip(1).Subscribe(value => { PhotonNetwork.CurrentRoom.SetBattleEnd(1); })
-                .AddTo(_cancellationTokenSource.Token);
+            foreach (var gameOverLine in _gameOverLines)
+            {
+                gameOverLine.GameEnd.Skip(1).Subscribe(value => { PhotonNetwork.CurrentRoom.SetBattleEnd(1); })
+                    .AddTo(_cancellationTokenSource.Token);
+            }
 
             _photonManager.BattleEnd.Subscribe(value =>
             {
