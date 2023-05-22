@@ -19,6 +19,7 @@ public partial class GameCore : MonoBehaviour
     [SerializeField] private AdMobManager adMobManager;
     [SerializeField] private IconDataManager iconDataManager;
     [SerializeField] private NgWordDataManager ngWordDataManager;
+    [SerializeField] private StageColliderManager stageColliderManager;
     [SerializeField] private TitleView titleView;
     [SerializeField] private BattleModeSelectView battleModeSelectView;
     [SerializeField] private BattleReadyView battleReadyView;
@@ -29,7 +30,8 @@ public partial class GameCore : MonoBehaviour
     [SerializeField] private SingleBattleResultView singleBattleResultView;
     [SerializeField] private CommonView commonView;
     [SerializeField] private BlockFactory blockFactory;
-    [SerializeField] private GameOverLine gameOverLine;
+    [SerializeField] private BlockParent blockParent;
+    [SerializeField] private GameOverLine[] gameOverLines;
     [SerializeField] private List<GameObject> uiObjects = new();
     [SerializeField] private GameObject advertisementObj;
     [SerializeField] private Transform stageParent;

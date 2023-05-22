@@ -7,8 +7,6 @@ public partial class GameCore
 {
     public class BattleResultState : State
     {
-        private GameOverLine _gameOverLine;
-        private CancellationTokenSource _cancellationTokenSource;
         private BattleResultView _battleResultView;
         private StateMachine<GameCore> _stateMachine;
         private UserDataManager _userDataManager;
@@ -33,8 +31,6 @@ public partial class GameCore
 
         private async UniTaskVoid Initialize()
         {
-            _cancellationTokenSource = new CancellationTokenSource();
-            _gameOverLine = Owner.gameOverLine;
             _battleResultView = Owner.battleResultView;
             _stateMachine = Owner._stateMachine;
             _userDataManager = Owner.userDataManager;

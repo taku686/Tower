@@ -17,9 +17,10 @@ public partial class GameCore
         private BattleView _battleView;
         private BlockFactory _blockFactory;
         private BlockDataManager _blockDataManager;
+        private StageColliderManager _stageColliderManager;
         private CancellationTokenSource _cancellationTokenSource;
         private BlockGameObject _currentBlockObj;
-        private GameOverLine _gameOverLine;
+        private GameOverLine[] _gameOverLines;
         private StateMachine<GameCore> _stateMachine;
         private float _time;
         private bool _push;
@@ -81,9 +82,11 @@ public partial class GameCore
             _battleView = Owner.battleView;
             _blockDataManager = Owner.blockDataManager;
             _blockFactory = Owner.blockFactory;
-            _gameOverLine = Owner.gameOverLine;
+            _gameOverLines = Owner.gameOverLines;
             _stateMachine = Owner._stateMachine;
+            _stageColliderManager = Owner.stageColliderManager;
             _blockCount = 0;
+            _stageColliderManager.Initialize();
             InitializeButton();
             InitializeSubscribe();
             _battleView.turnText.gameObject.SetActive(false);
@@ -140,11 +143,14 @@ public partial class GameCore
                 }
             })).AddTo(_cancellationTokenSource.Token);
 
-            _gameOverLine.GameEnd.Subscribe(value =>
+            foreach (var gameOverLine in _gameOverLines)
             {
-                DestroyAllBlock();
-                _stateMachine.Dispatch((int)Event.SingleBattleResult);
-            }).AddTo(_cancellationTokenSource.Token);
+                gameOverLine.GameEnd.Subscribe(value =>
+                {
+                    DestroyAllBlock();
+                    _stateMachine.Dispatch((int)Event.SingleBattleResult);
+                }).AddTo(_cancellationTokenSource.Token);
+            }
         }
 
         private async UniTaskVoid OnPointerUp(BlockGameObject blockSc)

@@ -42,7 +42,6 @@ public partial class GameCore
             _iconDataManager = Owner.iconDataManager;
             _isNameNullOrEmpty = false;
             Owner.blockFactory.ResetBlockParent();
-            Owner.gameOverLine.Setup();
             if (Camera.main != null) Camera.main.transform.localPosition = new Vector3(0, 0, -10);
             await Login();
             InitializeButton();
