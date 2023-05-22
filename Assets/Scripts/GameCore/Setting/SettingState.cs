@@ -1,3 +1,5 @@
+using System;
+using UnityEngine;
 using UnityEngine.Events;
 using State = StateMachine<GameCore>.State;
 
