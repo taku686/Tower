@@ -27,6 +27,7 @@ public partial class GameCore : MonoBehaviour
     [SerializeField] private NameChangeView nameChangeView;
     [SerializeField] private SettingView settingView;
     [SerializeField] private SingleBattleResultView singleBattleResultView;
+    [SerializeField] private CommonView commonView;
     [SerializeField] private BlockFactory blockFactory;
     [SerializeField] private GameOverLine gameOverLine;
     [SerializeField] private List<GameObject> uiObjects = new();
@@ -66,6 +67,7 @@ public partial class GameCore : MonoBehaviour
     private void Initialize()
     {
         SoundManager.Instance.BgmPlay();
+        commonView.loadingObj.SetActive(true);
         advertisementObj.SetActive(false);
         photonManager.Initialize(userDataManager);
         userDataManager.Initialize(playFabUserDataManager);

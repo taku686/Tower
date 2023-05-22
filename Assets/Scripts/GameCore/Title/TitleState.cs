@@ -13,6 +13,7 @@ public partial class GameCore
     {
         private PlayFabLoginManager _playFabLoginManager;
         private TitleView _titleView;
+        private CommonView _commonView;
         private StateMachine<GameCore> _stateMachine;
         private UserDataManager _userDataManager;
         private IconDataManager _iconDataManager;
@@ -35,6 +36,7 @@ public partial class GameCore
         {
             _playFabLoginManager = Owner.playFabLoginManager;
             _titleView = Owner.titleView;
+            _commonView = Owner.commonView;
             _stateMachine = Owner._stateMachine;
             _userDataManager = Owner.userDataManager;
             _iconDataManager = Owner.iconDataManager;
@@ -60,6 +62,7 @@ public partial class GameCore
 
         private void SetUpUiContents()
         {
+            _commonView.loadingObj.SetActive(false);
             var iconIndex = _userDataManager.GetIconIndex();
             _titleView.iconImage.sprite = _iconDataManager.GetIconSprite(iconIndex);
 
