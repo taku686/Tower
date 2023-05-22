@@ -18,7 +18,7 @@ public partial class GameCore
             _settingView = Owner.settingView;
             _stateMachine = Owner._stateMachine;
             InitializeButton();
-            InitializeSlider();
+            SoundManager.Instance.DecideSe();
             Owner.SwitchUiView((int)Event.Setting);
         }
 
@@ -28,14 +28,6 @@ public partial class GameCore
             var bgmValue = _settingView.bgmSlider.value;
             OnValueChangeBgmVolume(bgmValue);
             OnValueChangeSeVolume(seValue);
-        }
-
-        private void InitializeSlider()
-        {
-            /*_settingView.bgmSlider.onValueChanged.RemoveAllListeners();
-            _settingView.seSlider.onValueChanged.RemoveAllListeners();
-            _settingView.bgmSlider.onValueChanged.AddListener(OnValueChangeBgmVolume);
-            _settingView.seSlider.onValueChanged.AddListener(OnValueChangeSeVolume);*/
         }
 
         private void InitializeButton()

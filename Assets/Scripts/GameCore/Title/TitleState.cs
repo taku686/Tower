@@ -89,7 +89,6 @@ public partial class GameCore
 
         private void OnClickSetting()
         {
-            SoundManager.Instance.DecideSe();
             _stateMachine.Dispatch((int)Event.Setting);
         }
 
