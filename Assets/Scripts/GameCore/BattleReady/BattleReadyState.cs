@@ -15,8 +15,10 @@ public partial class GameCore
         private StageDataManager _stageDataManager;
         private BlockParent _blockParent;
         private Transform _stageParent;
+        private Transform _blockGeneratePoint;
         private bool _isProcessing;
-        private readonly Vector3 _initPos = new Vector3(0, 0.82f, 0);
+        private readonly Vector3 _initPos = new(0, 0.82f, 0);
+        private readonly Vector3 _blockInitPos = new(0, 3.2f, 0);
 
         protected override void OnEnter(State prevState)
         {
@@ -55,8 +57,14 @@ public partial class GameCore
             _stageDataManager = Owner.stageDataManager;
             _stageParent = Owner.stageParent;
             _blockParent = Owner.blockParent;
-            if (Camera.main != null) Camera.main.transform.localPosition = new Vector3(0, 0, -10);
+            _blockGeneratePoint = Owner.blockGeneratePoint;
+            if (Camera.main != null)
+            {
+                Camera.main.transform.localPosition = new Vector3(0, 0, -10);
+            }
+
             _blockParent.transform.position = _initPos;
+            _blockGeneratePoint.position = _blockInitPos;
             InitializeButton();
             Owner.SwitchUiView((int)Event.BattleReady);
         }

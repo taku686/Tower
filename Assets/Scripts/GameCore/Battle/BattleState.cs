@@ -36,6 +36,7 @@ public partial class GameCore
         private float _time;
         private bool _push;
         private int _blockCount;
+        private const int MinPlayerCount = 1;
 
         protected override void OnEnter(State prevState)
         {
@@ -51,6 +52,7 @@ public partial class GameCore
 
         protected override void OnUpdate()
         {
+            ForcedTermination();
             if (_currentBlockObj == null)
             {
                 return;
@@ -222,25 +224,11 @@ public partial class GameCore
             }
 
             var rigid = blockSc.GetComponent<Rigidbody2D>();
-            rigid.gravityScale = 1;
+            rigid.gravityScale = GameCommonData.GravityScale;
             _currentBlockObj = null;
             Owner._isMyTurn = !Owner._isMyTurn;
             await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
             blockSc.BlockStateReactiveProperty.Value = BlockSate.Moving;
-        }
-
-        private void OnClickRotate()
-        {
-            if (!Owner._isMyTurn || _currentBlockObj == null)
-            {
-                return;
-            }
-
-            SoundManager.Instance.DecideSe();
-            _currentBlockObj.BlockStateReactiveProperty.Value = BlockSate.Rotating;
-            var transform1 = _currentBlockObj.transform;
-            transform1.localPosition = new Vector3(0, transform1.localPosition.y, 0);
-            transform1.Rotate(Vector3.forward, 45);
         }
 
         private void OnClickPushDown()
@@ -277,6 +265,26 @@ public partial class GameCore
             }
 
             _currentBlockObj.transform.localEulerAngles += new Vector3(0f, 0f, _time * 50);
+        }
+
+        private void ForcedTermination()
+        {
+            if (PhotonNetwork.CurrentRoom.PlayerCount > MinPlayerCount)
+            {
+                return;
+            }
+
+            if (_battleEndCount >= PhotonNetwork.CurrentRoom.MaxPlayers)
+            {
+                return;
+            }
+
+            DestroyAllBlock();
+            _battleEndCount = 0;
+            _currentBlockObj = null;
+            Cancel();
+            PhotonNetwork.LeaveRoom();
+            _stateMachine.Dispatch((int)Event.Title);
         }
 
         private void DestroyAllBlock()

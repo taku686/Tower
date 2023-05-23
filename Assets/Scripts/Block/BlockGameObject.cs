@@ -1,4 +1,5 @@
 ﻿using System;
+using Cysharp.Threading.Tasks;
 using Data;
 using UniRx;
 using UnityEngine;
@@ -24,6 +25,20 @@ namespace Block
             BlockStateReactiveProperty.Value = state;
             index = blockIndex;
             isOwn = true;
+            InitializeSubscribe();
+        }
+
+        private void InitializeSubscribe()
+        {
+            BlockStateReactiveProperty.Subscribe(state =>
+            {
+                if (BlockStateReactiveProperty.Value != BlockSate.Stop)
+                {
+                    return;
+                }
+
+                _rigidbody2D.Sleep();
+            }).AddTo(gameObject.GetCancellationTokenOnDestroy());
         }
 
         private void FixedUpdate()
@@ -53,7 +68,7 @@ namespace Block
         {
             if (col.collider.CompareTag(GameCommonData.GroundTag) || col.collider.CompareTag(GameCommonData.BlockTag))
             {
-                _rigidbody2D.gravityScale = 1;
+                _rigidbody2D.gravityScale = GameCommonData.GravityScale;
             }
         }
 
