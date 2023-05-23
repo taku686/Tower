@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using DefaultNamespace;
 using Manager.DataManager;
 using Photon;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -105,5 +107,30 @@ public partial class GameCore : MonoBehaviour
         }
 
         uiObjects[index].SetActive(true);
+    }
+
+    private void OnApplicationPause(bool pauseStatus)
+    {
+        if (pauseStatus)
+        {
+            if (PhotonNetwork.InRoom)
+            {
+                PhotonNetwork.LeaveRoom();
+                PhotonNetwork.Disconnect();
+            }
+
+            _stateMachine.Dispatch((int)Event.Title);
+        }
+    }
+
+    private void OnApplicationQuit()
+    {
+        if (PhotonNetwork.InRoom)
+        {
+            PhotonNetwork.LeaveRoom();
+            PhotonNetwork.Disconnect();
+        }
+
+        _stateMachine.Dispatch((int)Event.Title);
     }
 }

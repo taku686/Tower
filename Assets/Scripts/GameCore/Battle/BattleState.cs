@@ -47,12 +47,17 @@ public partial class GameCore
         {
             _battleEndCount = 0;
             _currentBlockObj = null;
+            if (PhotonNetwork.IsConnected)
+            {
+                PhotonNetwork.Disconnect();
+            }
+
             Cancel();
         }
 
         protected override void OnUpdate()
+        
         {
-            ForcedTermination();
             if (_currentBlockObj == null)
             {
                 return;
@@ -201,6 +206,9 @@ public partial class GameCore
                 PhotonNetwork.LeaveRoom();
                 _stateMachine.Dispatch((int)Event.BattleResult);
             }).AddTo(_cancellationTokenSource.Token);
+
+            _photonManager.ForcedTermination.Subscribe(_ => { ForcedTermination(); })
+                .AddTo(_cancellationTokenSource.Token);
         }
 
         private void GenerateStage()
@@ -268,21 +276,13 @@ public partial class GameCore
         }
 
         private void ForcedTermination()
+
         {
-            if (PhotonNetwork.CurrentRoom.PlayerCount > MinPlayerCount)
-            {
-                return;
-            }
-
-            if (_battleEndCount >= PhotonNetwork.CurrentRoom.MaxPlayers)
-            {
-                return;
-            }
-
-            DestroyAllBlock();
+            Debug.Log("強制退出");
+          //  DestroyAllBlock();
             _battleEndCount = 0;
             _currentBlockObj = null;
-            Cancel();
+         //   Cancel();
             PhotonNetwork.LeaveRoom();
             _stateMachine.Dispatch((int)Event.Title);
         }
