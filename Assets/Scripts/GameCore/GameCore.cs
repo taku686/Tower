@@ -31,6 +31,7 @@ public partial class GameCore : MonoBehaviour
     [SerializeField] private CommonView commonView;
     [SerializeField] private BlockFactory blockFactory;
     [SerializeField] private BlockParent blockParent;
+    [SerializeField] private Transform blockGeneratePoint;
     [SerializeField] private GameOverLine[] gameOverLines;
     [SerializeField] private List<GameObject> uiObjects = new();
     [SerializeField] private GameObject advertisementObj;
