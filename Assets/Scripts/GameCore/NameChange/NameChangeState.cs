@@ -78,6 +78,15 @@ public partial class GameCore
         private void OnClickIconGrid(int index)
         {
             SoundManager.Instance.DecideSe();
+            foreach (var iconGrid in _iconGrids)
+            {
+                iconGrid.frameImage.enabled = false;
+                if (iconGrid.index == index)
+                {
+                    iconGrid.frameImage.enabled = true;
+                }
+            }
+
             _userDataManager.SetIconIndex(index);
         }
 
@@ -91,6 +100,10 @@ public partial class GameCore
                 iconGrid.index = iconData.Index;
                 iconGrid.iconButton.onClick.AddListener(() => { OnClickIconGrid(iconData.Index); });
                 _iconGrids.Add(iconGrid);
+                if (iconGrid.index != _userDataManager.GetIconIndex())
+                {
+                    iconGrid.frameImage.enabled = false;
+                }
             }
         }
 
