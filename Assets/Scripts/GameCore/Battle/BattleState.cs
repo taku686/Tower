@@ -30,13 +30,14 @@ public partial class GameCore
         private StageDataManager _stageDataManager;
         private StageColliderManager _stageColliderManager;
         private Transform _stageParent;
+        private GameObject _stageObj;
         private int _battleEndCount;
         private const string MyTurnText = "あなたの番";
         private const string EnemyTurnText = "相手の番";
         private float _time;
         private bool _push;
         private int _blockCount;
-        private const int MinPlayerCount = 1;
+
 
         protected override void OnEnter(State prevState)
         {
@@ -47,12 +48,20 @@ public partial class GameCore
         {
             _battleEndCount = 0;
             _currentBlockObj = null;
+            //DestroyAllBlock();
+            PhotonNetwork.DestroyAll();
+            PhotonNetwork.LeaveRoom();
+            if (PhotonNetwork.IsConnected)
+            {
+                PhotonNetwork.Disconnect();
+            }
+
             Cancel();
         }
 
         protected override void OnUpdate()
+
         {
-            ForcedTermination();
             if (_currentBlockObj == null)
             {
                 return;
@@ -197,16 +206,17 @@ public partial class GameCore
                     return;
                 }
 
-                DestroyAllBlock();
-                PhotonNetwork.LeaveRoom();
                 _stateMachine.Dispatch((int)Event.BattleResult);
             }).AddTo(_cancellationTokenSource.Token);
+
+            _photonManager.ForcedTermination.Subscribe(_ => { ForcedTermination(); })
+                .AddTo(_cancellationTokenSource.Token);
         }
 
         private void GenerateStage()
         {
             var stageData = _stageDataManager.GetRandomStageData();
-            PhotonNetwork.InstantiateRoomObject(
+            _stageObj = PhotonNetwork.InstantiateRoomObject(
                 GameCommonData.StagePrefabPass + stageData.Stage + "/" + stageData.Name, _stageParent.position,
                 _stageParent.rotation);
         }
@@ -268,21 +278,11 @@ public partial class GameCore
         }
 
         private void ForcedTermination()
+
         {
-            if (PhotonNetwork.CurrentRoom.PlayerCount > MinPlayerCount)
-            {
-                return;
-            }
-
-            if (_battleEndCount >= PhotonNetwork.CurrentRoom.MaxPlayers)
-            {
-                return;
-            }
-
-            DestroyAllBlock();
+            Debug.Log("強制退出");
             _battleEndCount = 0;
             _currentBlockObj = null;
-            Cancel();
             PhotonNetwork.LeaveRoom();
             _stateMachine.Dispatch((int)Event.Title);
         }
@@ -297,6 +297,11 @@ public partial class GameCore
             var blocks = GameObject.FindGameObjectsWithTag(GameCommonData.BlockTag);
             foreach (var block in blocks)
             {
+                if (block == null)
+                {
+                    continue;
+                }
+
                 PhotonNetwork.Destroy(block);
             }
         }

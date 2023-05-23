@@ -13,6 +13,7 @@ namespace Photon
         private UserDataManager _userDataManager;
         private Action _stageGenerateCallBack;
         private readonly Subject<Unit> _changeTurn = new();
+        private readonly Subject<Unit> _forcedTermination = new();
         private readonly Subject<int> _changeIndex = new();
         private readonly Subject<int> _generateBlock = new();
         private readonly Subject<int> _battleEnd = new();
@@ -23,6 +24,8 @@ namespace Photon
         public Subject<int> ChangeIndex => _changeIndex;
         public Subject<int> BattleEnd => _battleEnd;
         public Subject<Unit> ChangeTurn => _changeTurn;
+        public Subject<Unit> ForcedTermination => _forcedTermination;
+
 
         public void Initialize(UserDataManager userDataManager)
         {
@@ -73,6 +76,7 @@ namespace Photon
 
         public override void OnPlayerLeftRoom(Player otherPlayer)
         {
+            _forcedTermination.OnNext(Unit.Default);
         }
 
         public override void OnPlayerPropertiesUpdate(Player targetPlayer, Hashtable changedProps)
