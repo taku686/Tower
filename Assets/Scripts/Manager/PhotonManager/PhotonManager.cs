@@ -111,7 +111,7 @@ namespace Photon
 
                 if ((string)property.Key == GameCommonData.BlockIndexKey)
                 {
-                    Debug.Log("ブロック生成");
+                    //   Debug.Log("ブロック生成");
                     var index = (int)property.Value;
                     if (index == GameCommonData.ErrorCode)
                     {
@@ -141,7 +141,7 @@ namespace Photon
                         return;
                     }
 
-                    Debug.Log("Battle End");
+                    //  Debug.Log("Battle End");
                     _battleEnd.OnNext(index);
                 }
             }
