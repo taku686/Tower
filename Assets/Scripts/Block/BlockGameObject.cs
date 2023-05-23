@@ -53,7 +53,7 @@ namespace Block
         {
             if (col.collider.CompareTag(GameCommonData.GroundTag) || col.collider.CompareTag(GameCommonData.BlockTag))
             {
-                _rigidbody2D.gravityScale = 1;
+                _rigidbody2D.gravityScale = GameCommonData.GravityScale;
             }
         }
 

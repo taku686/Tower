@@ -222,7 +222,7 @@ public partial class GameCore
             }
 
             var rigid = blockSc.GetComponent<Rigidbody2D>();
-            rigid.gravityScale = 1;
+            rigid.gravityScale = GameCommonData.GravityScale;
             _currentBlockObj = null;
             Owner._isMyTurn = !Owner._isMyTurn;
             await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
