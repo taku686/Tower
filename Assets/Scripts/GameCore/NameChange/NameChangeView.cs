@@ -10,4 +10,5 @@ public class NameChangeView : MonoBehaviour
     public Button rightButton;
     public Transform iconParent;
     public IconGrid iconGrid;
+    public TextMeshProUGUI errorInfoText;
 }

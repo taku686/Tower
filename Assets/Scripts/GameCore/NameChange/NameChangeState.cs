@@ -47,6 +47,7 @@ public partial class GameCore
         private void SetupUiContent()
         {
             _nameChangeView.inputField.text = _userDataManager.GetUserName();
+            _nameChangeView.errorInfoText.gameObject.SetActive(false);
             GenerateIconGrid();
         }
 
@@ -56,6 +57,7 @@ public partial class GameCore
             var name = _nameChangeView.inputField.text;
             if (!_ngWordDataManager.Validate(name))
             {
+                _nameChangeView.errorInfoText.gameObject.SetActive(true);
                 Debug.Log("名前が適切ではありません。");
                 return;
             }
@@ -63,10 +65,12 @@ public partial class GameCore
             var result = await _userDataManager.SetUserNameAsync(name);
             if (!result)
             {
+                _nameChangeView.errorInfoText.gameObject.SetActive(true);
                 Debug.Log("名前が適切ではありません。");
                 return;
             }
 
+            _nameChangeView.errorInfoText.gameObject.SetActive(false);
             await _userDataManager.UpdateUserData();
             _stateMachine.Dispatch((int)Event.Title);
         }

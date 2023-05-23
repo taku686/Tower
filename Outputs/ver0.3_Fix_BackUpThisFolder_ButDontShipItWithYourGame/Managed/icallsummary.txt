@@ -217,6 +217,7 @@ UnityEngine.AudioSource::set_volume
 UnityEngine.Behaviour::get_enabled
 UnityEngine.Behaviour::get_isActiveAndEnabled
 UnityEngine.Behaviour::set_enabled
+UnityEngine.BoxCollider2D::set_size_Injected
 UnityEngine.Camera::GetAllCamerasCount
 UnityEngine.Camera::GetAllCamerasImpl
 UnityEngine.Camera::get_cullingMask
@@ -317,6 +318,7 @@ UnityEngine.Collider::get_bounds_Injected
 UnityEngine.Collider::set_enabled
 UnityEngine.Collider::get_attachedRigidbody
 UnityEngine.Collider2D::get_bounds_Injected
+UnityEngine.Collider2D::set_offset_Injected
 UnityEngine.Component::GetComponentFastPath
 UnityEngine.Component::GetComponentsForListInternal
 UnityEngine.Component::get_gameObject
