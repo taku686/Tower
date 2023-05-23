@@ -43,6 +43,12 @@ namespace Manager.DataManager
                     Debug.LogError("不適切な用語が含まれています。");
                     return false;
                 }
+
+                if (userName.Contains(word.Name))
+                {
+                    Debug.LogError("不適切な用語が含まれています。");
+                    return false;
+                }
             }
 
             return true;
