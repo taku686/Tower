@@ -27,6 +27,7 @@ public class BlockFactory : MonoBehaviour
         await UniTask.Delay(TimeSpan.FromSeconds(2));
         var block = PhotonNetwork.Instantiate(GameCommonData.BlockPrefabPass + data.Stage + "/" + data.Name,
             blockParent.position, blockParent.rotation);
+        block.transform.localScale = new Vector3(data.ScaleX, data.ScaleY, 1);
         var blockSc = block.GetComponent<BlockGameObject>();
         _count++;
         blockSc.Initialize(BlockSate.Generating, _count);
