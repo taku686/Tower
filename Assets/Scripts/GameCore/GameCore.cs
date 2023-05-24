@@ -61,6 +61,7 @@ public partial class GameCore : MonoBehaviour
     {
         SwitchUiView((int)(Event.Title));
         Initialize();
+        InitializeButton();
         InitializeState();
     }
 
@@ -79,6 +80,11 @@ public partial class GameCore : MonoBehaviour
         playFabTitleDataManager.Initialize(blockDataManager, stageDataManager, iconDataManager, ngWordDataManager);
         playFabLoginManager.Initialize(playFabTitleDataManager, userDataManager);
         titleView.Initialize();
+    }
+
+    private void InitializeButton()
+    {
+        commonView.disconnectionView.okButton.onClick.AddListener(OnClickBackToTitle);
     }
 
     private void InitializeState()
@@ -119,7 +125,8 @@ public partial class GameCore : MonoBehaviour
                 PhotonNetwork.Disconnect();
             }
 
-            _stateMachine.Dispatch((int)Event.Title);
+            commonView.disconnectionView.disconnectionObj.SetActive(true);
+            
         }
     }
 
@@ -131,6 +138,12 @@ public partial class GameCore : MonoBehaviour
             PhotonNetwork.Disconnect();
         }
 
+        _stateMachine.Dispatch((int)Event.Title);
+    }
+
+    private void OnClickBackToTitle()
+    {
+        commonView.disconnectionView.disconnectionObj.SetActive(false);
         _stateMachine.Dispatch((int)Event.Title);
     }
 }
