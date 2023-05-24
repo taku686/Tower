@@ -145,7 +145,7 @@ public partial class GameCore
 
             foreach (var gameOverLine in _gameOverLines)
             {
-                gameOverLine.GameEnd.Subscribe(value =>
+                gameOverLine.GameEnd.Skip(1).Subscribe(value =>
                 {
                     DestroyAllBlock();
                     _stateMachine.Dispatch((int)Event.SingleBattleResult);

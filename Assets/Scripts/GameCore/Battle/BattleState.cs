@@ -19,6 +19,7 @@ public partial class GameCore
     public class BattleState : State
     {
         private BattleView _battleView;
+        private CommonView _commonView;
         private PhotonManager _photonManager;
         private BlockFactory _blockFactory;
         private BlockDataManager _blockDataManager;
@@ -30,7 +31,6 @@ public partial class GameCore
         private StageDataManager _stageDataManager;
         private StageColliderManager _stageColliderManager;
         private Transform _stageParent;
-        private GameObject _stageObj;
         private int _battleEndCount;
         private const string MyTurnText = "あなたの番";
         private const string EnemyTurnText = "相手の番";
@@ -48,8 +48,11 @@ public partial class GameCore
         {
             _battleEndCount = 0;
             _currentBlockObj = null;
-            //DestroyAllBlock();
-            PhotonNetwork.DestroyAll();
+            if (PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.DestroyAll();
+            }
+
             PhotonNetwork.LeaveRoom();
             if (PhotonNetwork.IsConnected)
             {
@@ -102,6 +105,7 @@ public partial class GameCore
         {
             _cancellationTokenSource = new CancellationTokenSource();
             _battleView = Owner.battleView;
+            _commonView = Owner.commonView;
             _photonManager = Owner.photonManager;
             _blockDataManager = Owner.blockDataManager;
             _blockFactory = Owner.blockFactory;
@@ -166,7 +170,6 @@ public partial class GameCore
                     return;
                 }
 
-
                 _battleView.turnText.text = MyTurnText;
                 var blockData = _blockDataManager.GetBlockData(index, 3);
                 var block = await _blockFactory.GenerateBlock(blockData);
@@ -216,7 +219,7 @@ public partial class GameCore
         private void GenerateStage()
         {
             var stageData = _stageDataManager.GetRandomStageData();
-            _stageObj = PhotonNetwork.InstantiateRoomObject(
+            PhotonNetwork.InstantiateRoomObject(
                 GameCommonData.StagePrefabPass + stageData.Stage + "/" + stageData.Name, _stageParent.position,
                 _stageParent.rotation);
         }
@@ -278,13 +281,11 @@ public partial class GameCore
         }
 
         private void ForcedTermination()
-
         {
-            Debug.Log("強制退出");
             _battleEndCount = 0;
             _currentBlockObj = null;
             PhotonNetwork.LeaveRoom();
-            _stateMachine.Dispatch((int)Event.Title);
+            _commonView.disconnectionView.disconnectionObj.SetActive(true);
         }
 
         private void DestroyAllBlock()
