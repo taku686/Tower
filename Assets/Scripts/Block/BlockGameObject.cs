@@ -6,7 +6,6 @@ using UnityEngine;
 
 namespace Block
 {
-    [RequireComponent(typeof(Rigidbody2D))]
     public class BlockGameObject : MonoBehaviour
     {
         public readonly ReactiveProperty<BlockSate> BlockStateReactiveProperty = new() { Value = BlockSate.Generating };
@@ -25,24 +24,15 @@ namespace Block
             BlockStateReactiveProperty.Value = state;
             index = blockIndex;
             isOwn = true;
-            InitializeSubscribe();
-        }
-
-        private void InitializeSubscribe()
-        {
-            BlockStateReactiveProperty.Subscribe(state =>
-            {
-                if (BlockStateReactiveProperty.Value != BlockSate.Stop)
-                {
-                    return;
-                }
-
-                _rigidbody2D.Sleep();
-            }).AddTo(gameObject.GetCancellationTokenOnDestroy());
         }
 
         private void FixedUpdate()
         {
+            if (_rigidbody2D == null)
+            {
+                return;
+            }
+
             if (BlockStateReactiveProperty.Value == BlockSate.Stop)
             {
                 return;
@@ -61,25 +51,21 @@ namespace Block
             {
                 _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
                 BlockStateReactiveProperty.Value = BlockSate.Stop;
+                Destroy(_rigidbody2D);
             }
         }
 
         private void OnCollisionEnter2D(Collision2D col)
         {
-            if (col.collider.CompareTag(GameCommonData.GroundTag) || col.collider.CompareTag(GameCommonData.BlockTag))
-            {
-                _rigidbody2D.gravityScale = GameCommonData.GravityScale;
-            }
-        }
-
-        private void OnBecameInvisible()
-        {
-            if (BlockStateReactiveProperty.Value != BlockSate.Stop)
+            if (_rigidbody2D == null)
             {
                 return;
             }
 
-            _rigidbody2D.Sleep();
+            if (col.collider.CompareTag(GameCommonData.GroundTag) || col.collider.CompareTag(GameCommonData.BlockTag))
+            {
+                _rigidbody2D.gravityScale = GameCommonData.GravityScale;
+            }
         }
 
         private void OnDestroy()
