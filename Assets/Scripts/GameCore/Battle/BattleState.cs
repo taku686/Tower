@@ -48,8 +48,12 @@ public partial class GameCore
         {
             _battleEndCount = 0;
             _currentBlockObj = null;
-            //DestroyAllBlock();
-            PhotonNetwork.DestroyAll();
+            if (PhotonNetwork.IsMasterClient)
+            {
+                PhotonNetwork.Destroy(_stageObj);
+            }
+
+            DestroyAllBlock();
             PhotonNetwork.LeaveRoom();
             if (PhotonNetwork.IsConnected)
             {
@@ -216,7 +220,7 @@ public partial class GameCore
         private void GenerateStage()
         {
             var stageData = _stageDataManager.GetRandomStageData();
-            _stageObj = PhotonNetwork.InstantiateRoomObject(
+            _stageObj = PhotonNetwork.Instantiate(
                 GameCommonData.StagePrefabPass + stageData.Stage + "/" + stageData.Name, _stageParent.position,
                 _stageParent.rotation);
         }

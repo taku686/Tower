@@ -32,9 +32,11 @@ public partial class GameCore
 
         protected override void OnUpdate()
         {
-            if (!Owner._isOnLine)
+            if (!Owner._isOnLine && !_isProcessing)
             {
+                _isProcessing = true;
                 PhotonNetwork.OfflineMode = true;
+                Debug.Log("ステージ作成");
                 GenerateStage();
                 _stateMachine.Dispatch((int)Event.BattleSingle);
             }
@@ -42,6 +44,7 @@ public partial class GameCore
             if (Owner._isOnLine && !_isProcessing)
             {
                 _isProcessing = true;
+                Debug.Log("オンラインステージ作成");
                 _photonManager.SetStageGenerateCallBack(GenerateStage);
                 _photonManager.OnStartConnectNetwork();
             }

@@ -30,7 +30,6 @@ public partial class GameCore
             _stateMachine = Owner._stateMachine;
             _userDataManager = Owner.userDataManager;
             _adMobManager = Owner.adMobManager;
-            Destroy(Owner._stageObj);
             InitializeButton();
             await SetResultData();
             SetUpUiContent();
