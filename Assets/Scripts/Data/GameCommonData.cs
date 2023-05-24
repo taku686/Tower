@@ -27,5 +27,6 @@
         public const int MaxNameCount = 8;
         public const int MaxWinCount = 9999;
         public const int MaxRateCount = 99999;
+        public const int FPS = 50;
     }
 }

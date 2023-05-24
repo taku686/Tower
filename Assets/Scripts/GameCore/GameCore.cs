@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Data;
 using DefaultNamespace;
 using Manager.DataManager;
 using Photon;
@@ -59,6 +60,7 @@ public partial class GameCore : MonoBehaviour
 
     private void Start()
     {
+        Application.targetFrameRate = GameCommonData.FPS;
         SwitchUiView((int)(Event.Title));
         Initialize();
         InitializeButton();
@@ -126,7 +128,6 @@ public partial class GameCore : MonoBehaviour
             }
 
             commonView.disconnectionView.disconnectionObj.SetActive(true);
-            
         }
     }
 
