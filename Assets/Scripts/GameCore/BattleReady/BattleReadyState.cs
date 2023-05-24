@@ -42,7 +42,6 @@ public partial class GameCore
             if (Owner._isOnLine && !_isProcessing)
             {
                 _isProcessing = true;
-                _photonManager.SetStageGenerateCallBack(GenerateStage);
                 _photonManager.OnStartConnectNetwork();
             }
 
