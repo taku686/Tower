@@ -166,11 +166,13 @@ public partial class GameCore
                 if (!Owner._isMyTurn)
                 {
                     _battleView.turnText.text = EnemyTurnText;
+                    _battleView.rotateButton.gameObject.SetActive(false);
                     Owner._isMyTurn = !Owner._isMyTurn;
                     return;
                 }
 
                 _battleView.turnText.text = MyTurnText;
+                _battleView.rotateButton.gameObject.SetActive(true);
                 var blockData = _blockDataManager.GetBlockData(index, 3);
                 var block = await _blockFactory.GenerateBlock(blockData);
                 _currentBlockObj = block.GetComponent<BlockGameObject>();
