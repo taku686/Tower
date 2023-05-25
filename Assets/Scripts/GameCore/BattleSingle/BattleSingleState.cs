@@ -35,6 +35,8 @@ public partial class GameCore
         protected override void OnExit(State nextState)
         {
             _currentBlockObj = null;
+            Destroy(Owner._stageObj);
+            DestroyAllBlock();
             Cancel();
         }
 
@@ -171,20 +173,6 @@ public partial class GameCore
             Owner._isMyTurn = !Owner._isMyTurn;
             await UniTask.Delay(TimeSpan.FromSeconds(0.5f));
             blockSc.BlockStateReactiveProperty.Value = BlockSate.Moving;
-        }
-
-        private void OnClickRotate()
-        {
-            if (!Owner._isMyTurn || _currentBlockObj == null)
-            {
-                return;
-            }
-
-            SoundManager.Instance.DecideSe();
-            _currentBlockObj.BlockStateReactiveProperty.Value = BlockSate.Rotating;
-            var transform1 = _currentBlockObj.transform;
-            transform1.localPosition = new Vector3(0, transform1.localPosition.y, 0);
-            transform1.Rotate(Vector3.forward, 45);
         }
 
         private void OnClickPushDown()

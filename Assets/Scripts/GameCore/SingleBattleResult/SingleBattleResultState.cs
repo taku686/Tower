@@ -30,7 +30,6 @@ public partial class GameCore
             _stateMachine = Owner._stateMachine;
             _userDataManager = Owner.userDataManager;
             _adMobManager = Owner.adMobManager;
-            Destroy(Owner._stageObj);
             InitializeButton();
             await SetResultData();
             SetUpUiContent();
@@ -67,7 +66,7 @@ public partial class GameCore
 
         private void OnClickRetry()
         {
-            SoundManager.Instance.DecideSe();
+            SoundManager.Instance.GameStartSe();
             Owner._isOnLine = false;
             _stateMachine.Dispatch((int)Event.BattleReady);
         }

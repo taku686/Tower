@@ -53,7 +53,7 @@ public partial class GameCore
 
         private async UniTask OnClickCloseView()
         {
-            SoundManager.Instance.DecideSe();
+            SoundManager.Instance.CancelSe();
             var name = _nameChangeView.inputField.text;
             if (!_ngWordDataManager.Validate(name))
             {
@@ -80,11 +80,7 @@ public partial class GameCore
             SoundManager.Instance.DecideSe();
             foreach (var iconGrid in _iconGrids)
             {
-                iconGrid.frameImage.enabled = false;
-                if (iconGrid.index == index)
-                {
-                    iconGrid.frameImage.enabled = true;
-                }
+                iconGrid.frameImage.enabled = false || iconGrid.index == index;
             }
 
             _userDataManager.SetIconIndex(index);

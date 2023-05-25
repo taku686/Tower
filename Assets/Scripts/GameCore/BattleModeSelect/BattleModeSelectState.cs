@@ -32,14 +32,14 @@ public partial class GameCore
 
         private void OnClickSingleMode()
         {
-            SoundManager.Instance.DecideSe();
+            SoundManager.Instance.GameStartSe();
             Owner._isOnLine = false;
             _stateMachine.Dispatch((int)Event.BattleReady);
         }
 
         private void OnClickMultiMode()
         {
-            SoundManager.Instance.DecideSe();
+            SoundManager.Instance.GameStartSe();
             Owner._isOnLine = true;
             _stateMachine.Dispatch((int)Event.BattleReady);
         }
