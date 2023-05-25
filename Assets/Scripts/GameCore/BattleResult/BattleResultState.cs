@@ -94,7 +94,7 @@ public partial class GameCore
 
         private void OnClickRetry()
         {
-            SoundManager.Instance.DecideSe();
+            SoundManager.Instance.GameStartSe();
             Owner._isOnLine = true;
             _stateMachine.Dispatch((int)Event.BattleReady);
         }
