@@ -15,8 +15,10 @@ public partial class GameCore
         private StageDataManager _stageDataManager;
         private BlockParent _blockParent;
         private Transform _stageParent;
+        private Transform _blockGeneratePoint;
         private bool _isProcessing;
-        private readonly Vector3 _initPos = new Vector3(0, 0.82f, 0);
+        private readonly Vector3 _initPos = new(0, 0.82f, 0);
+        private readonly Vector3 _blockInitPos = new(0, 3.2f, 0);
 
         protected override void OnEnter(State prevState)
         {
@@ -30,9 +32,11 @@ public partial class GameCore
 
         protected override void OnUpdate()
         {
-            if (!Owner._isOnLine)
+            if (!Owner._isOnLine && !_isProcessing)
             {
+                _isProcessing = true;
                 PhotonNetwork.OfflineMode = true;
+                Debug.Log("ステージ作成");
                 GenerateStage();
                 _stateMachine.Dispatch((int)Event.BattleSingle);
             }
@@ -40,6 +44,7 @@ public partial class GameCore
             if (Owner._isOnLine && !_isProcessing)
             {
                 _isProcessing = true;
+                Debug.Log("オンラインステージ作成");
                 _photonManager.SetStageGenerateCallBack(GenerateStage);
                 _photonManager.OnStartConnectNetwork();
             }
@@ -55,8 +60,14 @@ public partial class GameCore
             _stageDataManager = Owner.stageDataManager;
             _stageParent = Owner.stageParent;
             _blockParent = Owner.blockParent;
-            if (Camera.main != null) Camera.main.transform.localPosition = new Vector3(0, 0, -10);
+            _blockGeneratePoint = Owner.blockGeneratePoint;
+            if (Camera.main != null)
+            {
+                Camera.main.transform.localPosition = new Vector3(0, 0, -10);
+            }
+
             _blockParent.transform.position = _initPos;
+            _blockGeneratePoint.position = _blockInitPos;
             InitializeButton();
             Owner.SwitchUiView((int)Event.BattleReady);
         }
