@@ -147,8 +147,11 @@ public partial class GameCore
 
             foreach (var gameOverLine in _gameOverLines)
             {
-                gameOverLine.GameEnd.Subscribe(value => { _stateMachine.Dispatch((int)Event.SingleBattleResult); })
-                    .AddTo(_cancellationTokenSource.Token);
+                gameOverLine.GameEnd.Skip(1).Subscribe(value =>
+                {
+                    DestroyAllBlock();
+                    _stateMachine.Dispatch((int)Event.SingleBattleResult);
+                }).AddTo(_cancellationTokenSource.Token);
             }
         }
 

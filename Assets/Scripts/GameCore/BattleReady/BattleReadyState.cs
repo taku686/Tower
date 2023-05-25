@@ -44,8 +44,6 @@ public partial class GameCore
             if (Owner._isOnLine && !_isProcessing)
             {
                 _isProcessing = true;
-                Debug.Log("オンラインステージ作成");
-                _photonManager.SetStageGenerateCallBack(GenerateStage);
                 _photonManager.OnStartConnectNetwork();
             }
 
