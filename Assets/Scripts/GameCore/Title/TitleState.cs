@@ -64,13 +64,13 @@ public partial class GameCore
             var iconIndex = _userDataManager.GetIconIndex();
             _titleView.iconImage.sprite = _iconDataManager.GetIconSprite(iconIndex);
 
-            if (string.IsNullOrEmpty(PlayerPrefs.GetString(GameCommonData.UserKey)))
+            if (string.IsNullOrEmpty(_userDataManager.GetUserName()))
             {
-                _titleView.nameText.text = "";
+                _stateMachine.Dispatch((int)Event.NameChange);
                 return;
             }
 
-            _titleView.nameText.text = PlayerPrefs.GetString(GameCommonData.UserKey);
+            _titleView.nameText.text = _userDataManager.GetUserName();
         }
 
         private void OnClickStart()
@@ -100,7 +100,7 @@ public partial class GameCore
             var result = await _playFabLoginManager.Login();
             if (!result)
             {
-                Debug.Log("ログイン失敗");
+                Debug.LogError("ログイン失敗");
                 return false;
             }
 
@@ -112,7 +112,7 @@ public partial class GameCore
             }
 
             _userDataManager.SetUserName(userName);
-            Debug.Log("ログイン成功");
+            //  Debug.Log("ログイン成功");
             return true;
         }
     }
