@@ -51,7 +51,7 @@ namespace Block
             {
                 _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
                 BlockStateReactiveProperty.Value = BlockSate.Stop;
-                Destroy(_rigidbody2D);
+                //   Destroy(_rigidbody2D);
             }
         }
 

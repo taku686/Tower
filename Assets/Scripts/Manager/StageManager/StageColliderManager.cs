@@ -11,7 +11,7 @@ public class StageColliderManager : MonoBehaviour
     [SerializeField] private BlockParent blockParent;
     private int _count;
     private const float DefaultValue = 0;
-    private const float Offset = 1f;
+    private const float Offset = 3f;
 
     public void Initialize()
     {

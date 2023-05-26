@@ -176,25 +176,17 @@ public partial class GameCore
                 var blockData = _blockDataManager.GetBlockData(index, 3);
                 var block = await _blockFactory.GenerateBlock(blockData);
                 _currentBlockObj = block.GetComponent<BlockGameObject>();
-                blocks.Add(block);
-                foreach (var blockObj in blocks)
+                _currentBlockObj.BlockStateReactiveProperty.Subscribe(state =>
                 {
-                    var blockGameObjectSc = blockObj.GetComponent<BlockGameObject>();
-                    blockGameObjectSc.BlockStateReactiveProperty.Subscribe(state =>
+                    if (state != BlockSate.Stop)
                     {
-                        if (state != BlockSate.Stop)
-                        {
-                            return;
-                        }
+                        return;
+                    }
 
-                        _blockCount++;
-                        if (_blockCount == blocks.Count)
-                        {
-                            var blockIndex = _blockDataManager.GetRandomBlockData().Id;
-                            PhotonNetwork.CurrentRoom.SetBlockIndex(blockIndex);
-                        }
-                    }).AddTo(_cancellationTokenSource.Token);
-                }
+                    var blockIndex = _blockDataManager.GetRandomBlockData().Id;
+                    PhotonNetwork.CurrentRoom.SetBlockIndex(blockIndex);
+                    
+                }).AddTo(_cancellationTokenSource.Token);
             })).AddTo(_cancellationTokenSource.Token);
 
             foreach (var gameOverLine in _gameOverLines)

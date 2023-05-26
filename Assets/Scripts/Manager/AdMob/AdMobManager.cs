@@ -18,6 +18,7 @@ public class AdMobManager : MonoBehaviour
     public GameObject AdLoaded;
     public GameObject AdLoading;
     private const string AssetName = "Ad1";
+    public TextMeshProUGUI debugText;
 
     void Start()
     {
@@ -65,12 +66,14 @@ public class AdMobManager : MonoBehaviour
 
     private void HandleAdFailedToLoad(object sender, AdFailedToLoadEventArgs args)
     {
+        debugText.text = "Native ad failed to load: " + args.LoadAdError.GetMessage();
         Debug.LogError("Native ad failed to load: " + args.LoadAdError.GetMessage());
     }
 
 
     private void HandleNativeAdLoaded(object sender, NativeAdEventArgs args)
     {
+        debugText.text = "Native ad loaded.";
         Debug.Log("Native ad loaded.");
         this.nativeAd = args.nativeAd;
         AdIconTexture.texture = nativeAd.GetIconTexture();
@@ -79,16 +82,19 @@ public class AdMobManager : MonoBehaviour
         adCallToAction.text = nativeAd.GetCallToActionText();
         if (!nativeAd.RegisterIconImageGameObject(AdIconTexture.gameObject))
         {
+            debugText.text = "error registering icon";
             Debug.Log("error registering icon");
         }
 
         if (!nativeAd.RegisterHeadlineTextGameObject(AdHeadline.gameObject))
         {
+            debugText.text = "error registering headline";
             Debug.Log("error registering headline");
         }
 
         if (!nativeAd.RegisterBodyTextGameObject(AdDescription.gameObject))
         {
+            debugText.text = "error registering description";
             Debug.Log("error registering description");
         }
 
