@@ -92,6 +92,7 @@ public partial class GameCore
             InitializeButton();
             InitializeSubscribe();
             _battleView.turnText.gameObject.SetActive(false);
+            _battleView.rotateButton.gameObject.SetActive(true);
             Owner.SwitchUiView((int)Event.Battle);
             var index = _blockDataManager.GetRandomBlockData().Id;
             _nextBlock.OnNext(index);
