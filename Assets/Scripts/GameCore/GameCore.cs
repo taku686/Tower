@@ -144,6 +144,11 @@ public partial class GameCore : MonoBehaviour
                 PhotonNetwork.Disconnect();
             }
 
+            if (_currentState != Event.Battle)
+            {
+                return;
+            }
+
             _stateMachine.Dispatch((int)Event.Title);
         }
     }
