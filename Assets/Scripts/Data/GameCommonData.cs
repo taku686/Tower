@@ -2,7 +2,7 @@
 {
     public static class GameCommonData
     {
-        public const string TitleId = "4C89B";
+        public const string TitleId = "37EED";
         public const string BannerAdUnitId = "ca-app-pub-3940256099942544/6300978111";
         public const string NativeAdUnitId = "ca-app-pub-3940256099942544/2247696110";
         public const string BlockMasterDataKey = "BlockMasterData";
