@@ -36,7 +36,6 @@ public partial class GameCore
             {
                 _isProcessing = true;
                 PhotonNetwork.OfflineMode = true;
-                Debug.Log("ステージ作成");
                 GenerateStage();
                 _stateMachine.Dispatch((int)Event.BattleSingle);
             }

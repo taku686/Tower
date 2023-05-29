@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using Data;
 using UniRx;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace Block
 {
@@ -12,7 +13,7 @@ namespace Block
         private Rigidbody2D _rigidbody2D;
         public int index;
         public bool isOwn;
-        private const float StopThreshold = 0.01f;
+        [SerializeField] private float stopThreshold = 0.001f;
 
         private void OnEnable()
         {
@@ -47,11 +48,10 @@ namespace Block
 
             if ((BlockStateReactiveProperty.Value == BlockSate.ReMove ||
                  BlockStateReactiveProperty.Value == BlockSate.Moving) &&
-                _rigidbody2D.velocity.magnitude <= StopThreshold)
+                _rigidbody2D.velocity.magnitude <= stopThreshold)
             {
                 _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
                 BlockStateReactiveProperty.Value = BlockSate.Stop;
-                //   Destroy(_rigidbody2D);
             }
         }
 
