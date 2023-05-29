@@ -66,7 +66,6 @@ public partial class GameCore
             _titleView.iconImage.sprite = _iconDataManager.GetIconSprite(iconIndex);
             if (string.IsNullOrEmpty(_userDataManager.GetUserName()))
             {
-                //   _stateMachine.Dispatch((int)Event.NameChange);
                 return;
             }
 
