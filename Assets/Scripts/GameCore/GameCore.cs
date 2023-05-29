@@ -43,6 +43,7 @@ public partial class GameCore : MonoBehaviour
     private bool _isMyTurn;
     private int _overlapBlockCount;
     private GameObject _stageObj;
+    private Event _currentState;
 
 //BattleSingleを一番最後に設定する
     private enum Event
@@ -109,6 +110,7 @@ public partial class GameCore : MonoBehaviour
 
     private void SwitchUiView(int index)
     {
+        _currentState = (Event)index;
         foreach (var obj in uiObjects)
         {
             obj.SetActive(false);
@@ -127,7 +129,22 @@ public partial class GameCore : MonoBehaviour
                 PhotonNetwork.Disconnect();
             }
 
+            if (_currentState != Event.Battle || _currentState != Event.BattleSingle)
+            {
+                return;
+            }
+
             commonView.disconnectionView.disconnectionObj.SetActive(true);
+        }
+        else
+        {
+            if (PhotonNetwork.InRoom)
+            {
+                PhotonNetwork.LeaveRoom();
+                PhotonNetwork.Disconnect();
+            }
+
+            _stateMachine.Dispatch((int)Event.Title);
         }
     }
 
