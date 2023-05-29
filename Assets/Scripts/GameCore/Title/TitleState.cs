@@ -27,6 +27,7 @@ public partial class GameCore
         {
             if (_isNameNullOrEmpty)
             {
+                _isNameNullOrEmpty = false;
                 _stateMachine.Dispatch((int)Event.NameChange);
             }
         }
@@ -63,10 +64,9 @@ public partial class GameCore
             _commonView.loadingObj.SetActive(false);
             var iconIndex = _userDataManager.GetIconIndex();
             _titleView.iconImage.sprite = _iconDataManager.GetIconSprite(iconIndex);
-
             if (string.IsNullOrEmpty(_userDataManager.GetUserName()))
             {
-                _stateMachine.Dispatch((int)Event.NameChange);
+                //   _stateMachine.Dispatch((int)Event.NameChange);
                 return;
             }
 
@@ -112,7 +112,7 @@ public partial class GameCore
             }
 
             _userDataManager.SetUserName(userName);
-            //  Debug.Log("ログイン成功");
+            Debug.Log("ログイン成功");
             return true;
         }
     }

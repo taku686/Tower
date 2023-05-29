@@ -22,11 +22,9 @@ public class AdMobManager : MonoBehaviour
 
     void Start()
     {
-        MobileAds.Initialize(initStatus =>
-        {
-            RequestNativeAd();
-            RequestBanner();
-        });
+        MobileAds.Initialize(initStatus => { });
+        RequestNativeAd();
+        RequestBanner();
     }
 
     private void RequestNativeAd()
