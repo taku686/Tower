@@ -24,9 +24,11 @@
         public const int ErrorCode = 999;
         public const float AmountOfRise = 3f;
         public const float GravityScale = 0.4f;
+        public const float RotationSpeed = 80f;
         public const int MaxNameCount = 8;
         public const int MaxWinCount = 9999;
         public const int MaxRateCount = 99999;
         public const int FPS = 50;
+        
     }
 }

@@ -73,7 +73,7 @@ public partial class GameCore
             if (_push)
             {
                 _time = Time.deltaTime;
-                SuccessiveRotate();
+                SuccessiveRotate(_time);
             }
 
             if (Input.GetMouseButton(0) && Owner._isMyTurn)
@@ -162,6 +162,7 @@ public partial class GameCore
             {
                 _blockCount = 0;
                 var blocks = GameObject.FindGameObjectsWithTag(GameCommonData.BlockTag).ToList();
+                FreezeAllBlocks(blocks);
                 Owner._overlapBlockCount = blocks.Count;
                 if (!Owner._isMyTurn)
                 {
@@ -185,7 +186,6 @@ public partial class GameCore
 
                     var blockIndex = _blockDataManager.GetRandomBlockData().Id;
                     PhotonNetwork.CurrentRoom.SetBlockIndex(blockIndex);
-                    
                 }).AddTo(_cancellationTokenSource.Token);
             })).AddTo(_cancellationTokenSource.Token);
 
@@ -265,14 +265,14 @@ public partial class GameCore
             transform1.localPosition = new Vector3(0, transform1.localPosition.y, 0);
         }
 
-        private void SuccessiveRotate()
+        private void SuccessiveRotate(float time)
         {
             if (!Owner._isMyTurn || _currentBlockObj == null)
             {
                 return;
             }
 
-            _currentBlockObj.transform.localEulerAngles += new Vector3(0f, 0f, _time * 50);
+            _currentBlockObj.transform.localEulerAngles -= new Vector3(0f, 0f, time * GameCommonData.RotationSpeed);
         }
 
         private void ForcedTermination()
@@ -299,6 +299,15 @@ public partial class GameCore
                 }
 
                 PhotonNetwork.Destroy(block);
+            }
+        }
+
+        private void FreezeAllBlocks(List<GameObject> blocks)
+        {
+            foreach (var block in blocks)
+            {
+                var rigid = block.GetComponent<Rigidbody2D>();
+                rigid.constraints = RigidbodyConstraints2D.FreezeAll;
             }
         }
 
