@@ -1,6 +1,7 @@
 ﻿using System;
 using Cysharp.Threading.Tasks;
 using Data;
+using Photon.Pun;
 using UniRx;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -11,12 +12,14 @@ namespace Block
     {
         public readonly ReactiveProperty<BlockSate> BlockStateReactiveProperty = new() { Value = BlockSate.Generating };
         private Rigidbody2D _rigidbody2D;
+        private PhotonView _photonView;
         public int index;
         public bool isOwn;
         [SerializeField] private float stopThreshold = 0.001f;
 
         private void OnEnable()
         {
+            _photonView = GetComponent<PhotonView>();
             _rigidbody2D = GetComponent<Rigidbody2D>();
         }
 
@@ -29,6 +32,11 @@ namespace Block
 
         private void FixedUpdate()
         {
+            if (!_photonView.IsMine)
+            {
+                return;
+            }
+
             if (_rigidbody2D == null)
             {
                 return;
@@ -50,7 +58,6 @@ namespace Block
                  BlockStateReactiveProperty.Value == BlockSate.Moving) &&
                 _rigidbody2D.velocity.magnitude <= stopThreshold)
             {
-                _rigidbody2D.constraints = RigidbodyConstraints2D.FreezeAll;
                 BlockStateReactiveProperty.Value = BlockSate.Stop;
             }
         }
