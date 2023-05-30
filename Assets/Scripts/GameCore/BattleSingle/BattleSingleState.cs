@@ -50,7 +50,7 @@ public partial class GameCore
             if (_push)
             {
                 _time = Time.deltaTime;
-                SuccessiveRotate();
+                SuccessiveRotate(_time);
             }
 
             if (Input.GetMouseButton(0))
@@ -203,14 +203,14 @@ public partial class GameCore
             transform1.localPosition = new Vector3(0, transform1.localPosition.y, 0);
         }
 
-        private void SuccessiveRotate()
+        private void SuccessiveRotate(float time)
         {
             if (_currentBlockObj == null)
             {
                 return;
             }
 
-            _currentBlockObj.transform.localEulerAngles += new Vector3(0f, 0f, _time * 50);
+            _currentBlockObj.transform.localEulerAngles -= new Vector3(0f, 0f, time * GameCommonData.RotationSpeed);
         }
 
         private void DestroyAllBlock()
