@@ -46,6 +46,7 @@ public partial class GameCore
 
         protected override void OnExit(State nextState)
         {
+            _stageColliderManager.Cancel();
             _battleEndCount = 0;
             _currentBlockObj = null;
             if (PhotonNetwork.IsMasterClient)

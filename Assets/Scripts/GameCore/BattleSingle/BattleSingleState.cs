@@ -35,6 +35,7 @@ public partial class GameCore
 
         protected override void OnExit(State nextState)
         {
+            _stageColliderManager.Cancel();
             _currentBlockObj = null;
             Destroy(Owner._stageObj);
             DestroyAllBlock();
