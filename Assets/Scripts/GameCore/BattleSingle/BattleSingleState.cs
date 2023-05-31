@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Block;
@@ -141,6 +142,7 @@ public partial class GameCore
                         {
                             Owner._overlapBlockCount = blocks.Count;
                             var blockIndex = _blockDataManager.GetRandomBlockData().Id;
+                            FreezeAllBlocks(blocks);
                             _nextBlock.OnNext(blockIndex);
                         }
                     }).AddTo(_cancellationTokenSource.Token);
@@ -219,6 +221,15 @@ public partial class GameCore
             foreach (var block in blocks)
             {
                 Destroy(block);
+            }
+        }
+
+        private void FreezeAllBlocks(List<GameObject> blocks)
+        {
+            foreach (var block in blocks)
+            {
+                var rigid = block.GetComponent<Rigidbody2D>();
+                rigid.constraints = RigidbodyConstraints2D.FreezeAll;
             }
         }
 
