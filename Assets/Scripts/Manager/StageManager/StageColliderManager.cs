@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UniRx;
 using UnityEngine;
@@ -12,13 +13,15 @@ public class StageColliderManager : MonoBehaviour
     private int _count;
     private const float DefaultValue = 0;
     private const float Offset = 3f;
+    private CancellationTokenSource _cts;
 
     public void Initialize()
     {
+        _cts = new CancellationTokenSource();
         _count = 0;
         SetupCollider(DefaultValue);
         blockParent.AmountOfRise.ThrottleFirst(TimeSpan.FromSeconds(1)).Subscribe(SetupCollider)
-            .AddTo(gameObject.GetCancellationTokenOnDestroy());
+            .AddTo(_cts.Token);
     }
 
     private void SetupCollider(float amountOfRise)
@@ -59,5 +62,12 @@ public class StageColliderManager : MonoBehaviour
                 wallRight.size = new Vector2(1, (rightTop.y * 2) - (amountOfRise * 2) + (Offset * 2));
             }
         }
+    }
+
+    public void Cancel()
+    {
+        _cts.Cancel();
+        _cts.Dispose();
+        _cts = null;
     }
 }
