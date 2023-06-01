@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using Block;
 using Cysharp.Threading.Tasks;
@@ -31,12 +30,10 @@ public partial class GameCore
         private StageDataManager _stageDataManager;
         private StageColliderManager _stageColliderManager;
         private Transform _stageParent;
-        private int _battleEndCount;
         private const string MyTurnText = "あなたの番";
         private const string EnemyTurnText = "相手の番";
         private float _time;
         private bool _push;
-        private int _blockCount;
 
 
         protected override void OnEnter(State prevState)
@@ -47,7 +44,6 @@ public partial class GameCore
         protected override void OnExit(State nextState)
         {
             _stageColliderManager.Cancel();
-            _battleEndCount = 0;
             _currentBlockObj = null;
             if (PhotonNetwork.IsMasterClient)
             {
@@ -116,7 +112,6 @@ public partial class GameCore
             _stageDataManager = Owner.stageDataManager;
             _stageParent = Owner.stageParent;
             _stageColliderManager = Owner.stageColliderManager;
-            _blockCount = 0;
             _stageColliderManager.Initialize();
             InitializeButton();
             InitializeSubscribe();
@@ -161,7 +156,7 @@ public partial class GameCore
 
             _photonManager.ChangeIndex.Subscribe(index => UniTask.Void(async () =>
             {
-                _blockCount = 0;
+                //     _blockCount = 0;
                 var blocks = GameObject.FindGameObjectsWithTag(GameCommonData.BlockTag).ToList();
                 FreezeAllBlocks(blocks);
                 Owner._overlapBlockCount = blocks.Count;
@@ -196,16 +191,8 @@ public partial class GameCore
                     .AddTo(_cancellationTokenSource.Token);
             }
 
-            _photonManager.BattleEnd.Subscribe(value =>
-            {
-                _battleEndCount += value;
-                if (_battleEndCount < PhotonNetwork.CurrentRoom.MaxPlayers)
-                {
-                    return;
-                }
-
-                _stateMachine.Dispatch((int)Event.BattleResult);
-            }).AddTo(_cancellationTokenSource.Token);
+            _photonManager.BattleEnd.Subscribe(value => { _stateMachine.Dispatch((int)Event.BattleResult); })
+                .AddTo(_cancellationTokenSource.Token);
 
             _photonManager.ForcedTermination.Subscribe(_ => { ForcedTermination(); })
                 .AddTo(_cancellationTokenSource.Token);
@@ -278,9 +265,9 @@ public partial class GameCore
 
         private void ForcedTermination()
         {
-            _battleEndCount = 0;
+            //     _battleEndCount = 0;
             _currentBlockObj = null;
-            PhotonNetwork.LeaveRoom();
+            //     PhotonNetwork.LeaveRoom();
             _commonView.disconnectionView.disconnectionObj.SetActive(true);
         }
 

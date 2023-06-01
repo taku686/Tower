@@ -1,10 +1,7 @@
-﻿using System;
-using Cysharp.Threading.Tasks;
-using Data;
+﻿using Data;
 using Photon.Pun;
 using UniRx;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace Block
 {
@@ -32,11 +29,6 @@ namespace Block
 
         private void FixedUpdate()
         {
-            if (!_photonView.IsMine)
-            {
-                return;
-            }
-
             if (_rigidbody2D == null)
             {
                 return;
