@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class BlockParent : MonoBehaviour
 {
-    public readonly Subject<float> AmountOfRise = new();
+    public readonly ReactiveProperty<float> AmountOfRise = new();
 
     private void OnTriggerStay2D(Collider2D col)
     {
@@ -21,6 +21,6 @@ public class BlockParent : MonoBehaviour
         }
 
         transform.position += new Vector3(0, GameCommonData.AmountOfRise, 0);
-        AmountOfRise.OnNext(GameCommonData.AmountOfRise);
+        AmountOfRise.SetValueAndForceNotify(GameCommonData.AmountOfRise);
     }
 }

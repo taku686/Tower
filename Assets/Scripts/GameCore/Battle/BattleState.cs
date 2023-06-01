@@ -157,7 +157,6 @@ public partial class GameCore
 
             _photonManager.ChangeIndex.Subscribe(index => UniTask.Void(async () =>
             {
-                //     _blockCount = 0;
                 var blocks = GameObject.FindGameObjectsWithTag(GameCommonData.BlockTag).ToList();
                 FreezeAllBlocks(blocks);
                 Owner._overlapBlockCount = blocks.Count;
