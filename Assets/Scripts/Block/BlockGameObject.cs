@@ -1,4 +1,5 @@
-﻿using Data;
+﻿using System;
+using Data;
 using Photon.Pun;
 using UniRx;
 using UnityEngine;
@@ -22,7 +23,7 @@ namespace Block
 
         public void Initialize(BlockSate state, int blockIndex)
         {
-            BlockStateReactiveProperty.Value = state;
+            BlockStateReactiveProperty.SetValueAndForceNotify(state);
             index = blockIndex;
             isOwn = true;
         }
@@ -41,7 +42,7 @@ namespace Block
 
             if (_rigidbody2D.velocity.y < 0)
             {
-                BlockStateReactiveProperty.Value = BlockSate.Moving;
+                BlockStateReactiveProperty.SetValueAndForceNotify(BlockSate.Moving);
                 return;
             }
 
@@ -50,7 +51,7 @@ namespace Block
                  BlockStateReactiveProperty.Value == BlockSate.Moving) &&
                 _rigidbody2D.velocity.magnitude <= stopThreshold)
             {
-                BlockStateReactiveProperty.Value = BlockSate.Stop;
+                BlockStateReactiveProperty.SetValueAndForceNotify(BlockSate.Stop);
             }
         }
 

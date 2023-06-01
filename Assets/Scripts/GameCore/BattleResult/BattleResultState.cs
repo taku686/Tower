@@ -26,7 +26,6 @@ public partial class GameCore
             Owner.advertisementObj.SetActive(false);
             _adMobManager.HideBanner();
             Owner._overlapBlockCount = 0;
-            Owner._isMyTurn = false;
         }
 
         private async UniTaskVoid Initialize()

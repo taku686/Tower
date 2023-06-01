@@ -15,10 +15,10 @@ public class GameOverLine : MonoBehaviour
         }
 
         var blockSc = col.GetComponent<BlockGameObject>();
-        if (blockSc.BlockStateReactiveProperty.Value != BlockSate.Moving)
+        /*if (blockSc.BlockStateReactiveProperty.Value != BlockSate.Moving)
         {
             return;
-        }
+        }*/
 
         GameEnd.SetValueAndForceNotify(!blockSc.isOwn);
     }

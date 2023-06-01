@@ -20,7 +20,6 @@ public partial class GameCore
         {
             Owner.advertisementObj.SetActive(false);
             _adMobManager.HideBanner();
-            Owner._isMyTurn = false;
             Owner._overlapBlockCount = 0;
         }
 
