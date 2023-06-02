@@ -3,8 +3,8 @@
     public static class GameCommonData
     {
         public const string TitleId = "37EED";
-        public const string BannerAdUnitId = "ca-app-pub-3940256099942544/6300978111";
-        public const string NativeAdUnitId = "ca-app-pub-3940256099942544/2247696110";
+        public const string BannerAdUnitId = "ca-app-pub-9042620078352933/9053283698";
+        public const string NativeAdUnitId = "ca-app-pub-9042620078352933/2487875341";
         public const string BlockMasterDataKey = "BlockMasterData";
         public const string StageMasterDataKey = "StageMasterData";
         public const string IconMasterDataKey = "IconMasterData";
